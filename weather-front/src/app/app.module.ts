@@ -7,6 +7,7 @@ import { ChartModule } from 'angular-highcharts';
 import { AppComponent } from './app.component';
 
 import { ChartComponent } from './chart/chart.component';
+import { TemperatureService } from './chart/temperature.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,9 @@ import { ChartComponent } from './chart/chart.component';
     HttpModule,
     ChartModule
   ],
-  providers: [],
+  providers: [
+    TemperatureService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

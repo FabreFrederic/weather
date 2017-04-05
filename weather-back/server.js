@@ -1,42 +1,36 @@
-// Get dependencies
+const morgan = require('morgan');
 const express = require('express');
-const path = require('path');
-const http = require('http');
-const runScheduler = require('./schedule/scheduler');
-
-// Get our API routes
-const api = require('./route/api');
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')( http );
+const runScheduler = require('./schedule/scheduler');
+const path = require('path');
+const bodyParser = require('body-parser');
 
 const frontBuildFolderPath = '../weather-front/build/';
 
+// Log the requests using morgan
+app.use(morgan('dev'));
+
 // Point static path to the front build folder
 app.use(express.static(path.join(__dirname, frontBuildFolderPath)));
+app.use(bodyParser.json());
 
-// Set our api routes
-app.use('/api', api);
+temperature = new Object();
 
-// Catch all other routes and return the index file
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, frontBuildFolderPath + 'index.html'));
+io.on('connection', function(socket) {
+  console.log('user connection');
+  runScheduler(function() {
+    temperature.temperature = Math.floor(Math.random() * 10)
+    temperature.date = new Date();
+    io.emit('temperature-message', temperature);
+  });
 });
 
-/**
- * Get port from environment and store in Express.
- */
-const port = process.env.PORT || '3000';
-app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-const server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port, () => console.log(`API running on localhost:${port}`));
-
-runScheduler(function() {
-  console.log("bonjour");
+io.on('disconnect', function(socket) {
+  console.log('user disconnected');
 });
+
+// Get port from environment and store in Express.
+const port = process.env.PORT || '8085';
+http.listen(port, "localhost");
