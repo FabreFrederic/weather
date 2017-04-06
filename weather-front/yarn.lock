@@ -129,9 +129,9 @@
   version "1.0.0"
   resolved "http://10.34.1.18:4873/@types%2fgeojson/-/geojson-1.0.0.tgz#6af48a0d492c09068e97cb78e6bef940d57fb36d"
 
-"@types/highcharts@^4.2.51":
-  version "4.2.51"
-  resolved "http://10.34.1.18:4873/@types%2fhighcharts/-/highcharts-4.2.51.tgz#1766d05923c2dc107c373773090cf025de27eb47"
+"@types/highcharts@^4.2.49":
+  version "4.2.54"
+  resolved "http://10.34.1.18:4873/@types%2fhighcharts/-/highcharts-4.2.54.tgz#b803fd15a7d45f124483213b437e9cdb6cb24fe2"
   dependencies:
     "@types/geojson" "*"
 
@@ -217,10 +217,6 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "http://10.34.1.18:4873/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
-
-angular-highcharts@^2.0.0:
-  version "2.0.0"
-  resolved "http://10.34.1.18:4873/angular-highcharts/-/angular-highcharts-2.0.0.tgz#820b300d0a27a1d10ec90da22c7077736c184dd5"
 
 ansi-align@^1.1.0:
   version "1.1.0"
@@ -1219,9 +1215,15 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "http://10.34.1.18:4873/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-debug@*, debug@2, debug@^2.1.3, debug@^2.2.0:
-  version "2.6.3"
-  resolved "http://10.34.1.18:4873/debug/-/debug-2.6.3.tgz#0f7eb8c30965ec08c72accfa0130c8b79984141d"
+debug@*, debug@2.3.3, debug@^2.1.3, debug@^2.2.0:
+  version "2.3.3"
+  resolved "http://10.34.1.18:4873/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
+  dependencies:
+    ms "0.7.2"
+
+debug@2, debug@2.6.1:
+  version "2.6.1"
+  resolved "http://10.34.1.18:4873/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
   dependencies:
     ms "0.7.2"
 
@@ -1230,18 +1232,6 @@ debug@2.2.0, debug@~2.2.0:
   resolved "http://10.34.1.18:4873/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
     ms "0.7.1"
-
-debug@2.3.3:
-  version "2.3.3"
-  resolved "http://10.34.1.18:4873/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
-  dependencies:
-    ms "0.7.2"
-
-debug@2.6.1:
-  version "2.6.1"
-  resolved "http://10.34.1.18:4873/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
-  dependencies:
-    ms "0.7.2"
 
 decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
@@ -5131,14 +5121,14 @@ write-file-atomic@^1.1.2:
     imurmurhash "^0.1.4"
     slide "^1.1.5"
 
-ws@1.1.1, ws@^1.0.1:
+ws@1.1.1:
   version "1.1.1"
   resolved "http://10.34.1.18:4873/ws/-/ws-1.1.1.tgz#082ddb6c641e85d4bb451f03d52f06eabdb1f018"
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"
 
-ws@1.1.2:
+ws@1.1.2, ws@^1.0.1:
   version "1.1.2"
   resolved "http://10.34.1.18:4873/ws/-/ws-1.1.2.tgz#8a244fa052401e08c9886cf44a85189e1fd4067f"
   dependencies:

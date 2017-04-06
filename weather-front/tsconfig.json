@@ -12,6 +12,11 @@
     "typeRoots": [
       "node_modules/@types"
     ],
+    "types": [
+      "clipboard",
+      "highcharts",
+      "lodash"
+    ],    
     "lib": [
       "es2016",
       "dom"

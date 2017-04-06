@@ -5,7 +5,7 @@ import * as io from 'socket.io-client';
 
 export interface Temperature {
   temperature: number;
-	date: Date;
+	date: string;
 }
 
 @Injectable()
@@ -14,7 +14,6 @@ export class TemperatureService {
   private socket;
 
   getTemperature(): Observable<Temperature> {
-    console.log('getTemperature');
     const observable = new Observable(observer => {
       this.socket = io(this.url);
       this.socket.on('temperature-message', (data) => {
