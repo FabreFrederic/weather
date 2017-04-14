@@ -18,7 +18,8 @@ export class ChartComponent implements OnInit, AfterViewInit {
   connection;
   chart: any;
   options: any;
-  formattedData: Array<any> = [];
+  temperatures: Array<any> = [];
+  currentTemperature: number;
 
 	constructor(private temperatureService: TemperatureService) {
     // Set the timezone offset on the computer timezone offset
@@ -33,41 +34,40 @@ export class ChartComponent implements OnInit, AfterViewInit {
   setOption() {
     this.options = {
       chart: {
-        type: 'area'
+        type: 'spline',
+        marginRight: 10
+      },
+      title: {
+        text: 'Aujourd\'hui'
       },
       xAxis: {
-        type : 'datetime',
-        title : {
-          text : ''
-        }
+        type : 'datetime'
       },
       yAxis : {
         title : {
-          text : ''
+          text : 'Temperature C°'
         }
-      },
-      title: {
-        text: ''
       },
       credits: {
         enabled: false
       },
       series: [{
         name: 'temperature',
-        data: this.formattedData
+        data: this.temperatures
       }]
     };
   }
+  
   /**
    * [add description]
    * @param  {string} date        [description]
    * @param  {number} temperature [description]
    * @return {[type]}             [description]
    */
-  add(date: string, temperature: number) {
+  addPoint(date: string, temperature: number) {
     // Highcharts prefers dates in milliseconds
     let newdate = +new Date(date);
-    this.formattedData.push({
+    this.temperatures.push({
         x: newdate,
         y: temperature
     });
@@ -76,9 +76,9 @@ export class ChartComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.connection = this.temperatureService.getTemperature().subscribe(
       message => {
-        this.add(message.date, message.temperature);
-        // this.chart.update({ series : {data : this.formattedData }});
-        this.chart.series[0].setData(this.formattedData, true);
+        this.addPoint(message.date, message.temperature);
+        this.chart.update({ series : {data : this.temperatures }});
+        this.currentTemperature = message.temperature;
     });
   }
 
