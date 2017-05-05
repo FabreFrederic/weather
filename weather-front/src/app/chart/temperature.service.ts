@@ -17,10 +17,14 @@ export class TemperatureService {
     const observable = new Observable(observer => {
       this.socket = io(this.url);
       this.socket.on('temperature-message', (data) => {
-        // console.log('data', data);
         observer.next(data);
       });
     });
     return observable;
   }
+
+  getOldTemperatures() {
+
+  }
+
 }

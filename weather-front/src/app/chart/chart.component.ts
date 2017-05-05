@@ -1,54 +1,71 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import * as _ from 'lodash';
 import * as HighchartsBoost from 'highcharts';
 import * as Highcharts from 'highcharts';
 
 import { TemperatureService } from './temperature.service';
 
+interface Temperature {
+  x: number;
+  y: number;
+}
+
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css']
 })
-export class ChartComponent implements AfterViewInit {
+export class ChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('chartContainer') public chartContainer: ElementRef;
   connection;
   chart: any;
   options: any;
   currentTemperature: number;
+  temperatures: Array<Temperature> = [];
 
 	constructor(private temperatureService: TemperatureService) {
     const me = this;
 
     // TODO : it works, but the time is not displayed at the beginning
-    // HighchartsBoost.setOptions({
-    //   global : {
-    //     timezoneOffset : new Date().getTimezoneOffset()
-    //   }
-    // });
+    Highcharts.setOptions({
+      global : {
+        timezoneOffset : new Date().getTimezoneOffset()
+      }
+    });
 
     this.connection = this.temperatureService.getTemperature().subscribe(
       message => {
-          if (me.chart) {
-            me.chart.series[0].addPoint([+new Date(message.date),
-              message.temperature], true, false);
-          }
+        let newDate: number = +new Date(message.date);
+
+        if (me.chart) {
+          me.chart.series[0].addPoint([newDate,
+            message.temperature], true, false);
+        }
         me.currentTemperature = message.temperature;
+        // Historic values
+        this.temperatures.push({
+             x: newDate,
+             y: message.temperature
+         });
+
     });
+
+    // TODO : get historic values from server
+    //
   }
 
   setOption() {
     this.options = {
       chart: {
-        type: 'spline',
+        type: 'area',
         marginRight: 10
       },
       title: {
         text: 'Aujourd\'hui'
       },
       xAxis: {
-        type : 'datetime'
-      },
+        type: 'datetime'
+	    },
       yAxis : {
         title : {
           text : 'Temperature C°'
@@ -58,7 +75,8 @@ export class ChartComponent implements AfterViewInit {
         enabled: false
       },
       series: [{
-        name: 'temperature'
+        name: 'temperature',
+        data: this.temperatures
       }]
     };
   }
@@ -67,10 +85,15 @@ export class ChartComponent implements AfterViewInit {
     this.setOption();
     if (this.chartContainer && this.chartContainer.nativeElement) {
       this.options.chart = {
-          type: 'spline',
           renderTo: this.chartContainer.nativeElement
       };
       this.chart = new Highcharts.Chart(this.options);
     }
   }
+
+  ngOnDestroy() {
+    console.log('unsubscribed from socket');
+    this.connection.unsubscribe();
+  }
+
 }
