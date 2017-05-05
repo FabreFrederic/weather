@@ -1,34 +1,39 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import * as _ from 'lodash';
 import * as HighchartsBoost from 'highcharts';
-import { TemperatureService } from './temperature.service';
+import * as Highcharts from 'highcharts';
 
-interface Temperature {
-	temperature: number;
-	date: string;
-}
+import { TemperatureService } from './temperature.service';
 
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css']
 })
-export class ChartComponent implements OnInit, AfterViewInit {
-  @ViewChild('chartContainer') private chartContainer: ElementRef;
+export class ChartComponent implements AfterViewInit {
+  @ViewChild('chartContainer') public chartContainer: ElementRef;
   connection;
   chart: any;
   options: any;
-  temperatures: Array<any> = [];
   currentTemperature: number;
 
 	constructor(private temperatureService: TemperatureService) {
-    // Set the timezone offset on the computer timezone offset
+    const me = this;
+
     HighchartsBoost.setOptions({
       global : {
         timezoneOffset : new Date().getTimezoneOffset()
       }
     });
-    this.setOption();
+
+    this.connection = this.temperatureService.getTemperature().subscribe(
+      message => {
+          if (me.chart) {
+            me.chart.series[0].addPoint([+new Date(message.date),
+              message.temperature], true, false);
+          }
+        me.currentTemperature = message.temperature;
+    });
   }
 
   setOption() {
@@ -52,39 +57,19 @@ export class ChartComponent implements OnInit, AfterViewInit {
         enabled: false
       },
       series: [{
-        name: 'temperature',
-        data: this.temperatures
+        name: 'temperature'
       }]
     };
   }
-  
-  /**
-   * [add description]
-   * @param  {string} date        [description]
-   * @param  {number} temperature [description]
-   * @return {[type]}             [description]
-   */
-  addPoint(date: string, temperature: number) {
-    // Highcharts prefers dates in milliseconds
-    let newdate = +new Date(date);
-    this.temperatures.push({
-        x: newdate,
-        y: temperature
-    });
-  }
-
-  ngOnInit() {
-    this.connection = this.temperatureService.getTemperature().subscribe(
-      message => {
-        this.addPoint(message.date, message.temperature);
-        this.chart.update({ series : {data : this.temperatures }});
-        this.currentTemperature = message.temperature;
-    });
-  }
 
   ngAfterViewInit() {
-		this.options.chart.renderTo = this.chartContainer.nativeElement;
-    this.chart = new HighchartsBoost.Chart(this.options);
+    this.setOption();
+    if (this.chartContainer && this.chartContainer.nativeElement) {
+      this.options.chart = {
+          type: 'spline',
+          renderTo: this.chartContainer.nativeElement
+      };
+      this.chart = new Highcharts.Chart(this.options);
+    }
   }
-
 }
