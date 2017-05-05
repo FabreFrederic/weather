@@ -33,4 +33,4 @@ io.on('disconnect', function(socket) {
 
 // Get port from environment and store in Express.
 const port = process.env.PORT || '8085';
-http.listen(port, "localhost");
+http.listen(port, "0.0.0.0");
