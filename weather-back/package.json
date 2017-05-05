@@ -10,6 +10,7 @@
     "body-parser": "^1.17.1",
     "express": "^4.14.0",
     "morgan": "^1.8.1",
+    "node-schedule": "^1.2.1",
     "socket.io": "^1.7.3"
   },
   "author": "Frederic Fabre",
