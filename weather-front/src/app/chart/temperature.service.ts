@@ -10,7 +10,7 @@ export interface Temperature {
 
 @Injectable()
 export class TemperatureService {
-  private  url = 'ws://localhost:8085';
+  private  url = 'ws://' + window.location.hostname + ':8085';
   private socket;
 
   getTemperature(): Observable<Temperature> {
