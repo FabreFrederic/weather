@@ -20,11 +20,12 @@ export class ChartComponent implements AfterViewInit {
 	constructor(private temperatureService: TemperatureService) {
     const me = this;
 
-    HighchartsBoost.setOptions({
-      global : {
-        timezoneOffset : new Date().getTimezoneOffset()
-      }
-    });
+    // TODO : it works, but the time is not displayed at the beginning
+    // HighchartsBoost.setOptions({
+    //   global : {
+    //     timezoneOffset : new Date().getTimezoneOffset()
+    //   }
+    // });
 
     this.connection = this.temperatureService.getTemperature().subscribe(
       message => {
