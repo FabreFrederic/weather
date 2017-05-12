@@ -23,9 +23,9 @@ io.on('connection', function(socket) {
   console.log('user connection');
 
   serialport.on('data', function(data) {
-    temperature.temperature = Number(data[0]);
+    temperature.temperature = Number(data);
     temperature.date = new Date();
-    console.log(temperature);
+    // console.log(temperature);
     io.emit('temperature-message', temperature);
   });
 
