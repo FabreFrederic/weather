@@ -1,7 +1,14 @@
 var SerialPort = require('serialport');
-var serialport = new SerialPort('/dev/ttyACM0', {
-  baudrate: 9600,
-  parser: SerialPort.parsers.readline("\n")
+
+const port = '/dev/ttyACM0';
+var serialport = new SerialPort(port, {
+    baudrate: 9600,
+    parser: SerialPort.parsers.readline("\n")
+});
+
+serialport.on('error', function(err) {
+  console.log('serialport error while opening the port : ' + port, err);
+  process.exit(1);
 });
 
 serialport.on('open', function() {

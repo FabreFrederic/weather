@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 
 const serialport = require('./sensor/serialPort');
 
+// Get port from environment and store in Express.
+const port = process.env.PORT || '8085';
 const frontBuildFolderPath = '../weather-front/build/';
 
 // Log the requests using morgan
@@ -17,7 +19,7 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, frontBuildFolderPath)));
 app.use(bodyParser.json());
 
-temperature = new Object();
+let temperature = new Object();
 
 io.on('connection', function(socket) {
   console.log('user connection');
@@ -39,6 +41,4 @@ io.on('disconnect', function(socket) {
   serialport.close();
 });
 
-// Get port from environment and store in Express.
-const port = process.env.PORT || '8085';
 http.listen(port, "0.0.0.0");
