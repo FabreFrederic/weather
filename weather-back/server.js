@@ -1,42 +1,44 @@
-// Get dependencies
+const morgan = require('morgan');
 const express = require('express');
-const path = require('path');
-const http = require('http');
-const runScheduler = require('./schedule/scheduler');
-
-// Get our API routes
-const api = require('./route/api');
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')( http );
+const path = require('path');
+const bodyParser = require('body-parser');
 
+const serialport = require('./sensor/serialPort');
+
+// Get port from environment and store in Express.
+const port = process.env.PORT || '8085';
 const frontBuildFolderPath = '../weather-front/build/';
+
+// Log the requests using morgan
+app.use(morgan('dev'));
 
 // Point static path to the front build folder
 app.use(express.static(path.join(__dirname, frontBuildFolderPath)));
+app.use(bodyParser.json());
 
-// Set our api routes
-app.use('/api', api);
+let temperature = new Object();
 
-// Catch all other routes and return the index file
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, frontBuildFolderPath + 'index.html'));
+io.on('connection', function(socket) {
+  console.log('user connection');
+
+  serialport.on('data', function(data) {
+    temperature.temperature = Number(data);
+    temperature.date = new Date();
+    // console.log(temperature);
+    io.emit('temperature-message', temperature);
+  });
+
+  serialport.on('close', function(err) {
+    console.log('serial port closed', err);
+  });
 });
 
-/**
- * Get port from environment and store in Express.
- */
-const port = process.env.PORT || '3000';
-app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-const server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port, () => console.log(`API running on localhost:${port}`));
-
-runScheduler(function() {
-  console.log("bonjour");
+io.on('disconnect', function(socket) {
+  console.log('user disconnected');
+  serialport.close();
 });
+
+http.listen(port, "0.0.0.0");
