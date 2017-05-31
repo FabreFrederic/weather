@@ -23,7 +23,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
   currentTemperature: number;
   temperatures: Array<Temperature> = [];
 
-	constructor(private temperatureService: TemperatureService) {
+  constructor(private temperatureService: TemperatureService) {
     const me = this;
 
     // TODO : it works, but the time is not displayed at the beginning
@@ -35,7 +35,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
 
     this.connection = this.temperatureService.getTemperature().subscribe(
       message => {
-        let newDate: number = +new Date(message.date);
+        const newDate: number = +new Date(message.date);
 
         if (me.chart) {
           me.chart.series[0].addPoint([newDate,
@@ -65,7 +65,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
       },
       xAxis: {
         type: 'datetime'
-	    },
+      },
       yAxis : {
         title : {
           text : 'Temperature C°'
