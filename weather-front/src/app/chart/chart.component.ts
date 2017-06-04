@@ -1,4 +1,6 @@
 import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
 import * as HighchartsBoost from 'highcharts';
 import * as Highcharts from 'highcharts';
@@ -18,6 +20,7 @@ interface Temperature {
 export class ChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('chartContainer') public chartContainer: ElementRef;
   connection;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   chart: any;
   options: any;
   currentTemperature: number;
@@ -33,7 +36,9 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    this.connection = this.temperatureService.getTemperature().subscribe(
+    this.connection = this.temperatureService.getTemperature()
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
       message => {
         const newDate: number = +new Date(message.date);
 
@@ -93,7 +98,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('unsubscribed from socket');
-    this.connection.unsubscribe();
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
-
 }
