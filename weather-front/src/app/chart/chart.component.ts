@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
@@ -96,9 +96,19 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    console.log('unsubscribed from socket');
+  private unsubscribe() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  ngOnDestroy() {
+    console.log('On destroy : unsubscribed from socket');
+    this.unsubscribe();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    console.log('Before unload : unsubscribed from socket');
+    this.unsubscribe();
   }
 }
