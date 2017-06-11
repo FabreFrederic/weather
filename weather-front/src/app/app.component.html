@@ -1,1 +1,28 @@
-<app-chart></app-chart>
+<md-sidenav-container>
+  <md-sidenav
+      #sidenav
+      mode="side"
+      class="app-sidenav">
+    <div>Sidenav</div>
+    <div>Sidenav</div>
+    <div>Sidenav</div>
+    <div>Sidenav</div>
+    <div>Sidenav</div>
+    <div>Sidenav</div>
+    <div>Sidenav</div>
+    <div>Sidenav</div>
+  </md-sidenav>
+
+  <md-toolbar color="primary">
+    <button class="app-icon-button" (click)="sidenav.toggle()">
+      <i class="material-icons app-toolbar-menu">menu</i>
+    </button>
+    <span>Temperature actuellement</span>
+  </md-toolbar>
+
+  <md-card>
+    <md-card-content>
+      <app-chart></app-chart>
+    </md-card-content>
+  </md-card>  
+</md-sidenav-container>

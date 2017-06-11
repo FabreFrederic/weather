@@ -1,4 +1,6 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
 import * as HighchartsBoost from 'highcharts';
 import * as Highcharts from 'highcharts';
@@ -18,12 +20,13 @@ interface Temperature {
 export class ChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('chartContainer') public chartContainer: ElementRef;
   connection;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   chart: any;
   options: any;
   currentTemperature: number;
   temperatures: Array<Temperature> = [];
 
-	constructor(private temperatureService: TemperatureService) {
+  constructor(private temperatureService: TemperatureService) {
     const me = this;
 
     // TODO : it works, but the time is not displayed at the beginning
@@ -33,9 +36,11 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    this.connection = this.temperatureService.getTemperature().subscribe(
+    this.connection = this.temperatureService.getTemperature()
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
       message => {
-        let newDate: number = +new Date(message.date);
+        const newDate: number = +new Date(message.date);
 
         if (me.chart) {
           me.chart.series[0].addPoint([newDate,
@@ -65,7 +70,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
       },
       xAxis: {
         type: 'datetime'
-	    },
+      },
       yAxis : {
         title : {
           text : 'Temperature C°'
@@ -91,9 +96,19 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    console.log('unsubscribed from socket');
-    this.connection.unsubscribe();
+  private unsubscribe() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
+  ngOnDestroy() {
+    console.log('On destroy : unsubscribed from socket');
+    this.unsubscribe();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    console.log('Before unload : unsubscribed from socket');
+    this.unsubscribe();
+  }
 }
