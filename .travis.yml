@@ -1,24 +1,9 @@
-language: node_js
-
-sudo: true
-
-cache:
-  directories:
-    - node
-    - node_modules
-
+sudo: required
 dist: trusty
-
-node_js:
-  - '6.10.2'
-
-branches:
-  only:
-  - master
+language: node_js
+node_js: stable
 
 before_install:
- - cd weather-front
- - npm install -g angular-cli
  - export CHROME_BIN=/usr/bin/google-chrome
  - export DISPLAY=:99.0
  - sh -e /etc/init.d/xvfb start
@@ -26,11 +11,18 @@ before_install:
  - sudo apt-get install -y libappindicator1 fonts-liberation
  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
  - sudo dpkg -i google-chrome*.deb
+ - npm install -g @angular/cli@latest
+
+install:
+  - npm install --prefix $TRAVIS_BUILD_DIR/weather-front
 
 script:
- - ng test --watch false # http://mseemann.de/frontend/2016/05/31/setup-angular-2-app-part-1.html
- - ng serve &
- - ng e2e
+  - cd $TRAVIS_BUILD_DIR/weather-front && ng build
+  - cd $TRAVIS_BUILD_DIR/weather-front && ng test --watch=false
+
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/weather-front/node_modules
 
 notifications:
   webhooks:
