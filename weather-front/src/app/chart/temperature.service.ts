@@ -1,30 +1,62 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Http, Response } from '@angular/http';
+
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 import * as io from 'socket.io-client';
 
-export interface Temperature {
-  temperature: number;
-  date: string;
-}
+import { environment } from 'environments/environment';
+import { Temperature } from '../business/temperature';
+
+const temperatureSocketUrl = environment.temperatureSocketUrl;
+const temperatureRestUrl = environment.temperatureRestUrl;
+const temperatureSocketName = environment.temperatureSocketName;
 
 @Injectable()
 export class TemperatureService {
-  private  url = 'ws://' + window.location.hostname + ':8085';
   private socket;
 
-  getTemperature(): Observable<Temperature> {
+  constructor(public http: Http) {}
+
+  /**
+   * [getTemperature description]
+   * @return {Observable<Temperature>}
+   */
+  public getTemperature(): Observable<Temperature> {
     const observable = new Observable(observer => {
-      this.socket = io(this.url);
-      this.socket.on('temperature-message', (data) => {
+      this.socket = io(temperatureSocketUrl);
+      this.socket.on(temperatureSocketName, (data) => {
         observer.next(data);
       });
     });
     return observable;
   }
 
-  getOldTemperatures() {
+  /**
+   * Get the today temperatures, from 00:00 am to now
+   * @return {Observable<Temperature[]>}
+   */
+  public getTodayTemperatures(): Observable<Temperature[]> {
+    return this.http
+      .get(temperatureRestUrl + '/temperatures/today')
+      .map(response => {
+        const temperatures = response.json();
+        return temperatures.map((temperature) => new Temperature(temperature)
+        );
+      })
+      .catch(this.handleError);
+  }
 
+  /**
+   * Handle and throw error when a rest service is called
+   * @param  {Response | any}         error [description]
+   * @return {[type]}        [description]
+   */
+  private handleError (error: Response | any) {
+    console.error('TemperatureService::handleError', error);
+    return Observable.throw(error);
   }
 
 }

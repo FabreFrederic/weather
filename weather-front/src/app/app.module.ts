@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MdSidenavModule, MdToolbarModule, MdCardModule } from '@angular/material';
-import {MaterialModule} from '@angular/material';
+import { MaterialModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { ChartComponent } from './chart/chart.component';
