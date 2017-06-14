@@ -12,6 +12,7 @@ before_install:
  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
  - sudo dpkg -i google-chrome*.deb
  - npm install -g @angular/cli@latest
+ - npm i webpack --save-dev
 
 install:
   - npm install --prefix $TRAVIS_BUILD_DIR/weather-front
