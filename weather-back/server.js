@@ -6,38 +6,26 @@ const io = require('socket.io')( http );
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const mongoose   = require('mongoose');
-const database = require('./config/database')
-const Temperature = require('./models/temperature');
-
-// Log the requests using morgan
-app.use(morgan(morgan('dev')));
-
-// const serialport = require('./sensor/serialPort');
+const temperatureController = require('./controller/temperatureController');
 
 // Get port from environment and store in Express.
 const port = process.env.PORT || '8085';
-const frontBuildFolderPath = '../weather-front/build/';
-
-mongoose.connect(database.remoteUrl);
-
-// Point static path to the front build folder
-app.use(express.static(path.join(__dirname, frontBuildFolderPath)));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// var router = express.Router();
-//// middleware to use for all requests
-// router.use((req, res, next) => {
-//     console.log('Something is happening.');
-//     // make sure we go to the next routes and don't stop here
-//     next();
-// });
+// Log the requests using morgan
+app.use(morgan('dev'));
 
-var routes = require('./route/temperatureRoute');
-routes(app);
+// Temperature rest service
+app.use('/temperature', temperatureController);
 
+// Point static path to the front build folder
+const frontBuildFolderPath = '../weather-front/build/';
+app.use(express.static(path.join(__dirname, frontBuildFolderPath)));
+
+// // Sensor connection and socket
+// const serialport = require('./sensor/serialPort');
 // let temperature = new Object();
 
 // io.on('connection', function(socket) {
@@ -60,5 +48,7 @@ routes(app);
 //   serialport.close();
 // });
 
-app.listen(port);
-// http.listen(port, "0.0.0.0");
+// Server
+var server = app.listen(port, "0.0.0.0", function() {
+  console.log('Express server listening on port ' + port);
+});
