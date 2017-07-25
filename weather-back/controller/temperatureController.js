@@ -9,27 +9,49 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 // creates a new temperature
 router.post('/', function (req, res) {
-  var result = createTemperature(req.body.temperature);
-  if (typeof result !== 'undefined') {
-    res.status(200).send(result);
-  } else {
-    return res.status(500).send('There was a problem adding the information to the database');
-  }
+  createTemperature(req.body.temperature).then(function (result) {
+      res.status(200).send(result);
+  }).catch(function (err) {
+      res.status(500).send('There was a problem adding the information to the database');
+  });
 });
 
-var createTemperature = function(temperatureValue) {
-  temperature.create({
+const createTemperature = function(temperatureValue) {
+    return new Promise((resolve, reject) => {
+      temperature.create({
           temperature : temperatureValue,
           date : new Date()
       },
-      function (err, newTemperature) {
+      (err, newTemperature) => {
         if (err) {
           console.log("There was a problem adding the information to the database : " + err);
-        } else if (typeof newTemperature !== 'undefined') {
-          return newTemperature;
+          reject(err);
+        } else {
+          resolve(newTemperature);
         }
       });
-}
+    }
+  )};
+
+const findTodayTemperatures = function() {
+  var now = new Date();
+  var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  return new Promise((resolve, reject) => {
+    temperature.find({
+        date : new Date()
+    },
+    (err, temperatures) => {
+      if (err) {
+        console.log("There was a problem finding today temperature in the database : " + err);
+        reject(err);
+      } else {
+        resolve(newTemperature);
+      }
+    });
+  }
+  )};
 
 module.exports = router;
 module.exports.method = createTemperature;
+module.exports.method = findTodayTemperatures;

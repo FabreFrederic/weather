@@ -24,29 +24,34 @@ app.use('/temperature', temperatureController);
 const frontBuildFolderPath = '../weather-front/build/';
 app.use(express.static(path.join(__dirname, frontBuildFolderPath)));
 
-// // Sensor connection and socket
-// const serialport = require('./sensor/serialPort');
-// let temperature = new Object();
+// Sensor connection and socket
+const serialport = require('./sensor/serialPort');
+let temperature = new Object();
 
-// io.on('connection', function(socket) {
-//   console.log('user connection');
-//
-//   serialport.on('data', function(data) {
-//     temperature.temperature = Number(data);
-//     temperature.date = new Date();
-//     // console.log(temperature);
-//     io.emit('temperature-message', temperature);
-//   });
-//
-//   serialport.on('close', function(err) {
-//     console.log('serial port closed', err);
-//   });
-// });
-//
-// io.on('disconnect', function(socket) {
-//   console.log('user disconnected');
-//   serialport.close();
-// });
+io.on('connection', function(socket) {
+  console.log('user connection');
+
+  serialport.on('data', function(data) {
+    temperature.temperature = Number(data);
+    temperature.date = new Date();
+    console.log(temperature);
+    io.emit('temperature-message', temperature);
+    createTemperature(temperature.temperature).then(function (result) {
+        // console.log(temperature);
+    }).catch(function (err) {
+        console.log('Error, temperature not persisted : ', temperature.temperature);
+    });
+  });
+
+  serialport.on('close', function(err) {
+    console.log('serial port closed', err);
+  });
+});
+
+io.on('disconnect', function(socket) {
+  console.log('user disconnected');
+  serialport.close();
+});
 
 // Server
 var server = app.listen(port, "0.0.0.0", function() {
