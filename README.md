@@ -1,14 +1,46 @@
 # Weather
 
-weather station and pool temperature monitoring
-Display the temperature readings in charts. The arduino temperature sensor send data to a node.js server. The frontend is devloped in Angular 4.
+Weather station and pool temperature monitoring.
+For the moment, only one temperature sensor is connected. More sensors will be available in the next releases.
+Display the temperature readings in charts. The arduino temperature sensor send data to a node.js server. The frontend is develop in Angular 4.
 
+## Arduino
+You have to use a DS18B20 temperature sensor
+https://cdn.sparkfun.com/datasheets/Sensors/Temp/DS18B20.pdf
+Connect your Arduino to your PC by USB
+
+## MongoDb
 Data are stored in a Mongodb database.
-How to use Docker ?
-docker pull mongo:latest
-Create the container called my-mongo, and store the data on your PC in /opt/mongodb/db
-sudo mkdir -p /opt/mongodb/db
-docker run -p 27017:27017 -v /opt/mongodb/db:/data/db --name my-mongo -d mongo
+You can use Docker container
+`docker pull mongo:latest`
+Create the container called weather-mongo, and store the data on your PC in /opt/mongodb/db
+`sudo mkdir -p /opt/mongodb/db`
+Change the folder owner on the host
+`sudo chown -R mylinuxuser:mylinuxuser /opt/mongodb`
+Start the mongo container
+`sh weather-docker/startMongo.sh`
+
+To display container logs
+`docker logs weather-mongo`
+
+Mongo connection
+`mongo localhost`
+Create a database called weather-db, in the mongo shell
+`use weather-db`
+
+To delete all the documents in a temperatures collection in mongodb (in order to test)
+`db.temperatures.remove({})`
+
+## Build the frontend
+`cd weather-front`
+`ng build --prod` in production environment
+or
+`npm start` in development environment
+
+## Launch the server
+`cd weather-back`
+`node server.js`
+
 
 Waffle.io
 

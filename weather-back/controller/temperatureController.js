@@ -43,24 +43,31 @@ router.get('/today', (req, res) => {
 });
 
 const findTodayTemperatures = function() {
-  var now = new Date();
-  var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // var now = new Date();
+  // var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  var start = new Date();
+  start.setHours(0,0,0,0);
+
+  var end = new Date();
+  end.setHours(23,59,59,999);
+
+// db.posts.find({'date': {$gte: start, $lt: end}});
 
   return new Promise((resolve, reject) => {
-    temperature.find({
-        date : new Date()
-    },
+    temperature.find({'date' : {$gte: start, $lt: end}},
     (err, temperatures) => {
       if (err) {
-        console.log("There was a problem finding today temperature in the database : " + err);
+        console.log('There was a problem finding today temperature in the database : ' + err);
         reject(err);
       } else {
-        resolve(newTemperature);
+        console.log('Todat temperatures from db : ', temperatures);
+        resolve(temperatures);
       }
     });
   }
 )};
 
 module.exports = router;
-module.exports.method = createTemperature;
-module.exports.method = findTodayTemperatures;
+module.exports.createTemperature = createTemperature;
+module.exports.findTodayTemperatures = findTodayTemperatures;

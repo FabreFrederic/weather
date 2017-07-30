@@ -34,7 +34,6 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
   constructor(private temperatureService: TemperatureService) {
     const me = this;
 
-    // TODO : it works, but the time is not displayed at the beginning
     Highcharts.setOptions({
       global : {
         timezoneOffset : new Date().getTimezoneOffset()
@@ -58,22 +57,25 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
              x: newDate,
              y: message.temperature
          });
-
     });
   }
 
   public ngOnInit() {
     // Subscribe to the temperature rest service to get
-    // the today temperature readings
+    // the today temperature readings on init
     this.temperatureService
       .getTodayTemperatures()
       .subscribe(
         (todayTemperatures) => {
+          // console.log('todayTemperatures : ', todayTemperatures);
           todayTemperatures.map((temperature) => {
             this.temperaturePoints.push({
               x: +new Date(temperature.date),
               y: temperature.temperature
             });
+            this.chart.series[0].update({
+              data : this.temperaturePoints
+            }, true);
           });
         }
       );

@@ -34,7 +34,7 @@ describe('TemperatureService', () => {
 
     it('should return an empty array by default', inject([TemperatureService],
       (service: TemperatureService) => {
-      //expect(service.getTodayTemperatures()).toBeUndefined();
+      // expect(service.getTodayTemperatures()).toBeUndefined();
       expect(service.getTodayTemperatures()).not.toBeNull();
       expect(service.getTodayTemperatures()).not.toBeUndefined();
       console.log('---------------');
