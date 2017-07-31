@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  temperatureSocketUrl: 'ws://' + window.location.hostname + ':8085',
+  temperatureSocketUrl: 'ws://' + window.location.hostname + ':8086',
   temperatureRestUrl: 'http://' + window.location.hostname + ':8085',
   temperatureSocketName: 'temperature-message'
 };

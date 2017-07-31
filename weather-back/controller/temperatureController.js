@@ -8,10 +8,10 @@ var temperature = require('../models/temperature');
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // creates a new temperature
-router.post('/', function (req, res) {
+router.post('/', (req, res) => {
   createTemperature(req.body.temperature).then(function (result) {
       res.status(200).send(result);
-  }).catch(function (err) {
+  }).catch((err) => {
       res.status(500).send('There was a problem adding the information to the database');
   });
 });
@@ -31,7 +31,16 @@ const createTemperature = function(temperatureValue) {
         }
       });
     }
-  )};
+)};
+
+// Returns all the today temperatures
+router.get('/today', (req, res) => {
+  findTodayTemperatures(req.body.temperature).then(function (result) {
+      res.status(200).send(result);
+  }).catch((err) => {
+      res.status(500).send('There was a problem retrieving the today temperatures from database');
+  });
+});
 
 const findTodayTemperatures = function() {
   var now = new Date();
@@ -50,7 +59,7 @@ const findTodayTemperatures = function() {
       }
     });
   }
-  )};
+)};
 
 module.exports = router;
 module.exports.method = createTemperature;
