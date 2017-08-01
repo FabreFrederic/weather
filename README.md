@@ -4,6 +4,8 @@ Weather station and pool temperature monitoring.
 For the moment, only one temperature sensor is connected. More sensors will be available in the next releases.
 Display the temperature readings in charts. The arduino temperature sensor send data to a node.js server. The frontend is develop in Angular 4.
 
+![alt text](https://github.com/FabreFrederic/weather/raw/master/screenshot.gif "screenshot")
+
 ## Arduino
 You have to use a DS18B20 temperature sensor
 https://cdn.sparkfun.com/datasheets/Sensors/Temp/DS18B20.pdf
@@ -29,6 +31,7 @@ Create a database called weather-db, in the mongo shell
 `use weather-db`
 
 To delete all the documents in a temperatures collection in mongodb (in order to test)
+`use weather`
 `db.temperatures.remove({})`
 
 ## Build the frontend
