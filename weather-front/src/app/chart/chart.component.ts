@@ -84,7 +84,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
   private setOption() {
     this.options = {
       chart: {
-        type: 'area',
+        backgroundColor : 'transparent',
         marginRight: 10
       },
       title: {
@@ -101,8 +101,33 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
       credits: {
         enabled: false
       },
+      plotOptions: {
+          area: {
+              fillColor: {
+                  linearGradient: { x1: 0, y1: 1, x2: 0, y2: 0},
+                  stops: [
+                      [0, '#a3d9ff'],
+                      [1, '#f4f4f4']
+                  ]
+              },
+              color: '#a3d9ff',
+              lineWidth: 1,
+              marker: {
+                  enabled: true
+              },
+              shadow: true,
+              states: {
+                  hover: {
+                      lineWidth: 1
+                  }
+              },
+              threshold: null
+          }
+      },
       series: [{
+        type: 'area',
         name: 'temperature',
+        allowPointSelect: true,
         data: this.temperaturePoints
       }]
     };
