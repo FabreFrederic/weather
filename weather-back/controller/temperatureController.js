@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
   createTemperature(req.body.temperature).then(function (result) {
       res.status(200).send(result);
   }).catch((err) => {
-      res.status(500).send('There was a problem adding the information to the database');
+      res.status(500).send('There was a problem adding the information to MongoDB');
   });
 });
 
@@ -24,7 +24,7 @@ const createTemperature = function(temperatureValue) {
       },
       (err, newTemperature) => {
         if (err) {
-          console.log("There was a problem adding the information to the database : " + err);
+          console.log("There was a problem adding the information to MongoDB : " + err);
           reject(err);
         } else {
           resolve(newTemperature);
@@ -38,33 +38,28 @@ router.get('/today', (req, res) => {
   findTodayTemperatures(req.body.temperature).then(function (result) {
       res.status(200).send(result);
   }).catch((err) => {
-      res.status(500).send('There was a problem retrieving the today temperatures from database');
+      res.status(500).send('There was a problem retrieving the today temperatures from MongoDB');
   });
 });
 
 const findTodayTemperatures = function() {
-  // var now = new Date();
-  // var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
   var start = new Date();
   start.setHours(0,0,0,0);
 
   var end = new Date();
   end.setHours(23,59,59,999);
 
-// db.posts.find({'date': {$gte: start, $lt: end}});
-
   return new Promise((resolve, reject) => {
-    temperature.find({'date' : {$gte: start, $lt: end}},
+    temperature.find( {'date' : { $gte: start, $lt: end } },
     (err, temperatures) => {
       if (err) {
-        console.log('There was a problem finding today temperature in the database : ' + err);
+        console.log('There was a problem finding today temperature in MongoDB' + err);
         reject(err);
       } else {
-        console.log('Todat temperatures from db : ', temperatures);
+        console.log('Get today temperatures from MongoDB');
         resolve(temperatures);
       }
-    });
+    }).sort( { 'date': 1 } );
   }
 )};
 

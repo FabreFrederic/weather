@@ -1,10 +1,11 @@
+declare var require: any;
 import { Component, AfterViewInit, OnDestroy, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
-import * as HighchartsBoost from 'highcharts';
-import * as Highcharts from 'highcharts';
+
+let Highcharts = require('highcharts/highstock');
 
 import { TemperatureService } from './temperature.service';
 
@@ -73,20 +74,16 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
               x: +new Date(temperature.date),
               y: temperature.temperature
             });
-            this.chart.series[0].update({
-              data : this.temperaturePoints
-            }, true);
           });
+          this.chart.series[0].update({
+            data : this.temperaturePoints
+          }, true);
         }
       );
   }
 
   private setOption() {
     this.options = {
-      chart: {
-        backgroundColor : 'transparent',
-        marginRight: 10
-      },
       title: {
         text: 'Aujourd\'hui'
       },
@@ -101,33 +98,23 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
       credits: {
         enabled: false
       },
-      plotOptions: {
-          area: {
-              fillColor: {
-                  linearGradient: { x1: 0, y1: 1, x2: 0, y2: 0},
-                  stops: [
-                      [0, '#a3d9ff'],
-                      [1, '#f4f4f4']
-                  ]
-              },
-              color: '#a3d9ff',
-              lineWidth: 1,
-              marker: {
-                  enabled: true
-              },
-              shadow: true,
-              states: {
-                  hover: {
-                      lineWidth: 1
-                  }
-              },
-              threshold: null
-          }
+      navigator: {
+        enabled: true
+      },
+      rangeSelector : {
+        enabled: false
       },
       series: [{
-        type: 'area',
+        type: 'areaspline',
         name: 'temperature',
-        allowPointSelect: true,
+        fillColor: {
+            linearGradient: { x1: 0, y1: 1, x2: 0, y2: 0},
+            stops: [
+                [0, '#a3d9ff'],
+                [1, '#f4f4f4']
+            ]
+        },
+        color: '#a3d9ff',
         data: this.temperaturePoints
       }]
     };
@@ -139,7 +126,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
       this.options.chart = {
           renderTo: this.chartContainer.nativeElement
       };
-      this.chart = new Highcharts.Chart(this.options);
+      this.chart = new Highcharts.stockChart(this.options);
     }
   }
 

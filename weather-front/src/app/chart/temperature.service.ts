@@ -41,7 +41,8 @@ export class TemperatureService {
   public getTodayTemperatures(): Observable<Temperature[]> {
     return this.http
       .get(temperatureRestUrl + '/temperature/today')
-      .map(response => {
+      .map((response:Response) => {
+        console.log('getTodayTemperatures', new Date());
         const temperatures = response.json();
         return temperatures.map((temperature) => new Temperature(temperature)
         );
