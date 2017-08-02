@@ -1,5 +1,6 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
 import * as HighchartsBoost from 'highcharts';
@@ -7,7 +8,7 @@ import * as Highcharts from 'highcharts';
 
 import { TemperatureService } from './temperature.service';
 
-interface Temperature {
+interface TemperaturePoint {
   x: number;
   y: number;
 }
@@ -17,26 +18,30 @@ interface Temperature {
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css']
 })
-export class ChartComponent implements AfterViewInit, OnDestroy {
+export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('chartContainer') public chartContainer: ElementRef;
-  connection;
+
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   chart: any;
   options: any;
   currentTemperature: number;
-  temperatures: Array<Temperature> = [];
+  private temperaturePoints: TemperaturePoint[] = [];
 
+  /**
+  * Constructor
+  * @param  {TemperatureService} privatetemperatureService
+  */
   constructor(private temperatureService: TemperatureService) {
     const me = this;
 
-    // TODO : it works, but the time is not displayed at the beginning
     Highcharts.setOptions({
       global : {
         timezoneOffset : new Date().getTimezoneOffset()
       }
     });
 
-    this.connection = this.temperatureService.getTemperature()
+    // Subscribe to the temperature socket to get the last temperature readings
+    this.temperatureService.getTemperature()
       .takeUntil(this.ngUnsubscribe)
       .subscribe(
       message => {
@@ -48,18 +53,35 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
         }
         me.currentTemperature = message.temperature;
         // Historic values
-        this.temperatures.push({
+        this.temperaturePoints.push({
              x: newDate,
              y: message.temperature
          });
-
     });
-
-    // TODO : get historic values from server
-    //
   }
 
-  setOption() {
+  public ngOnInit() {
+    // Subscribe to the temperature rest service to get
+    // the today temperature readings on init
+    this.temperatureService
+      .getTodayTemperatures()
+      .subscribe(
+        (todayTemperatures) => {
+          // console.log('todayTemperatures : ', todayTemperatures);
+          todayTemperatures.map((temperature) => {
+            this.temperaturePoints.push({
+              x: +new Date(temperature.date),
+              y: temperature.temperature
+            });
+            this.chart.series[0].update({
+              data : this.temperaturePoints
+            }, true);
+          });
+        }
+      );
+  }
+
+  private setOption() {
     this.options = {
       chart: {
         type: 'area',
@@ -81,7 +103,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
       },
       series: [{
         name: 'temperature',
-        data: this.temperatures
+        data: this.temperaturePoints
       }]
     };
   }

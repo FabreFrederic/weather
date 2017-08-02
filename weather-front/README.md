@@ -2,6 +2,13 @@
 
 weather station and pool temperature monitoring
 
+## MongoDB configuration
+db.createUser({user:"admin", pwd:"adminpwd", roles:[{role:"root", db:"admin"}]})
+mongo -u admin -p adminpwd --authenticationDatabase admin
+
+use weather
+db.createCollection("temperature")
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

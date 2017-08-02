@@ -8,7 +8,7 @@ var serialport = new SerialPort(port, {
 
 serialport.on('error', function(err) {
   console.log('serialport error while opening the port : ' + port, err);
-  process.exit(1);
+  // process.exit(1);
 });
 
 serialport.on('open', function() {
