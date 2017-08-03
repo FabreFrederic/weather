@@ -1,0 +1,33 @@
+.mat-card-header {
+  margin-bottom: 24px;
+}
+
+.mat-card-header .mat-card-title {
+  font-size: 24px;
+}
+
+.mat-card-header .mat-card-subtitle {
+  font-size: 16px;
+}
+
+.value-circle-card {
+  width: 200px;
+  margin: 10px;
+}
+
+.value-circle-card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.chart-card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.chart-card {
+  width: 800px;
+  margin: 10px;
+}

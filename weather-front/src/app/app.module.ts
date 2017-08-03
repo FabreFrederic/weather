@@ -8,7 +8,7 @@ import { MaterialModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { ChartComponent } from './chart/chart.component';
-import { TemperatureService } from './chart/temperature.service';
+import { TemperatureService } from './temperature/temperature.service';
 import { ValueCircleComponent } from './value-circle/value-circle.component';
 import { TemperatureComponent } from './temperature/temperature.component';
 

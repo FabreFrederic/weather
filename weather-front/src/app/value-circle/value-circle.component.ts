@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, Input, SimpleChange } from '@angular/core';
 import * as highcharts from 'highcharts';
 
 import { ValueCircleConfig } from './value-circle-config';
@@ -18,8 +18,6 @@ export class ValueCircleComponent implements AfterViewInit {
   @Input() valueCircleConfig: ValueCircleConfig;
   @Input() valueToDisplay: number;
 
-  @Input() count: number;
-
   gauge: any;
   options: any;
   value: any;
@@ -27,7 +25,6 @@ export class ValueCircleComponent implements AfterViewInit {
   constructor() {
     highchartsMore(highcharts);
     solidGauge(highcharts);
-    console.log(this.count);
   }
 
   private setOption() {
@@ -91,7 +88,7 @@ export class ValueCircleComponent implements AfterViewInit {
       },
       series: [{
           name: this.valueCircleConfig.serieName,
-          data: [this.valueToDisplay],
+          data: this.valueToDisplay,
           type: 'solidgauge',
           linecap: 'square',
           tooltip: {
@@ -118,4 +115,12 @@ export class ValueCircleComponent implements AfterViewInit {
       this.gauge = new highcharts.Chart(this.options);
     }
   }
+
+  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+      if (changes['valueToDisplay'] && this.valueToDisplay) {
+        if (this.gauge) {
+          this.gauge.series[0].setData([this.valueToDisplay], true, false);
+        }
+      }
+   }
 }
