@@ -28,10 +28,9 @@ export class ValueCircleComponent implements AfterViewInit, OnInit {
   private setOption() {
     this.options = {
       chart: {
-
        },
       title: {
-        text: 'Current temperature'
+        text: null
       },
       pane: {
           center: ['50%', '50%'],
@@ -39,7 +38,7 @@ export class ValueCircleComponent implements AfterViewInit, OnInit {
           startAngle: 0,
           endAngle: 360,
           background: {
-              backgroundColor: '#EEE',
+              backgroundColor: 'transparent',
               innerRadius: '60%',
               outerRadius: '100%',
               shape: 'arc'
@@ -50,12 +49,13 @@ export class ValueCircleComponent implements AfterViewInit, OnInit {
       },
       // the value axis
       yAxis: {
-        min: 0,
-        max: 200,
+        min: -20,
+        max: 45,
         stops: [
-            [0.1, '#55BF3B'], // green
-            [0.5, '#DDDF0D'], // yellow
-            [0.9, '#DF5353'] // red
+            [0.1, '#B9F2A1'],
+            [0.5, '#6EBA8C'],
+            [0.7, '#0E8174'],
+            [0.9, '#005562']
         ],
         lineWidth: 0,
         minorTickInterval: null,
@@ -73,6 +73,7 @@ export class ValueCircleComponent implements AfterViewInit, OnInit {
       },
       plotOptions: {
           solidgauge: {
+              borderWidth: '0px',
               dataLabels: {
                   y: -20,
                   borderWidth: 0,
@@ -82,10 +83,17 @@ export class ValueCircleComponent implements AfterViewInit, OnInit {
       },
       series: [{
           name: 'Current temperature',
-          data: [30],
+          data: [10],
           type: 'solidgauge',
+          linecap: 'square',
           tooltip: {
-              valueSuffix: ' ° C'
+              valueSuffix: '° C'
+          },
+          dataLabels: {
+            style: {
+              fontSize: "50px",
+              fontWeight: "bold"
+            }
           }
       }]
     };

@@ -85,7 +85,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
   private setOption() {
     this.options = {
       title: {
-        text: 'Aujourd\'hui'
+        text: null
       },
       xAxis: {
         type: 'datetime'
@@ -110,11 +110,11 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
         fillColor: {
             linearGradient: { x1: 0, y1: 1, x2: 0, y2: 0},
             stops: [
-                [0, '#a3d9ff'],
+                [0, '#BBE2DE'],
                 [1, '#f4f4f4']
             ]
         },
-        color: '#a3d9ff',
+        color: '#BBE2DE',
         data: this.temperaturePoints
       }]
     };

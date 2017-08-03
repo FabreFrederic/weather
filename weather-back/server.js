@@ -60,11 +60,11 @@ io.on('connection', function(socket) {
     temperature.date = new Date();
     io.emit('temperature-message', temperature);
 
-    // temperatureController.createTemperature(temperature.temperature).then(function (result) {
-    //    // console.log('New temperature persisted : ', temperature);
-    // }).catch(function (err) {
-    //     console.log('Error, temperature not persisted : ', temperature.temperature);
-    // });
+    temperatureController.createTemperature(temperature.temperature).then(function (result) {
+       // console.log('New temperature persisted : ', temperature);
+    }).catch(function (err) {
+        console.log('Error, temperature not persisted : ', temperature.temperature);
+    });
   });
 
   // serialport.on('data', function(data) {
