@@ -1,17 +1,24 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
 import * as highcharts from 'highcharts';
 
-declare var require: any;
-var highchartsMore = require('highcharts/highcharts-more');
-var solidGauge = require('highcharts/modules/solid-gauge');
+import { ValueCircleConfig } from './value-circle-config';
+
+declare const require: any;
+const highchartsMore = require('highcharts/highcharts-more');
+const solidGauge = require('highcharts/modules/solid-gauge');
 
 @Component({
   selector: 'app-value-circle',
   templateUrl: './value-circle.component.html',
   styleUrls: ['./value-circle.component.css']
 })
-export class ValueCircleComponent implements AfterViewInit, OnInit {
+export class ValueCircleComponent implements AfterViewInit {
   @ViewChild('gaugeContainer') public gaugeContainer: ElementRef;
+
+  @Input() valueCircleConfig: ValueCircleConfig;
+  @Input() valueToDisplay: number;
+
+  @Input() count: number;
 
   gauge: any;
   options: any;
@@ -20,52 +27,53 @@ export class ValueCircleComponent implements AfterViewInit, OnInit {
   constructor() {
     highchartsMore(highcharts);
     solidGauge(highcharts);
-  }
-
-  ngOnInit() {
+    console.log(this.count);
   }
 
   private setOption() {
     this.options = {
       chart: {
        },
-      title: {
-        text: null
-      },
+      title: null,
       pane: {
-          center: ['50%', '50%'],
-          size: '100%',
-          startAngle: 0,
-          endAngle: 360,
-          background: {
-              backgroundColor: 'transparent',
-              innerRadius: '60%',
-              outerRadius: '100%',
-              shape: 'arc'
-          }
+        size: '90%',
+         startAngle: this.valueCircleConfig.startAngle,
+         endAngle: this.valueCircleConfig.endAngle,
+         background: {
+             backgroundColor: '#EEE',
+             innerRadius: '95%',
+             outerRadius: '100%',
+             shape: 'arc'
+         }
       },
       tooltip: {
           enabled: true
       },
       // the value axis
       yAxis: {
-        min: -20,
-        max: 45,
+        min: this.valueCircleConfig.min,
+        max: this.valueCircleConfig.max,
         stops: [
-            [0.1, '#B9F2A1'],
-            [0.5, '#6EBA8C'],
-            [0.7, '#0E8174'],
-            [0.9, '#005562']
+            [0, '#000088'],
+            [16 / 60, '#000088'],
+            [17 / 60, '#5555ff'],
+            [27 / 60, '#5555ff'],
+            [28 / 60, '#00ff00'],
+            [38 / 60, '#00ff00'],
+            [40 / 60, '#ff8c00'],
+            [44 / 60, '#ff8c00'],
+            [45 / 60, '#ff0000']
         ],
         lineWidth: 0,
         minorTickInterval: null,
-        tickPixelInterval: 400,
-        tickWidth: 0,
+        tickPixelInterval: 50,
+        tickWidth: 1,
         title: {
             y: -70
         },
         labels: {
-            enabled:false
+            enabled: true,
+            distance: 10
         }
       },
       credits: {
@@ -73,26 +81,28 @@ export class ValueCircleComponent implements AfterViewInit, OnInit {
       },
       plotOptions: {
           solidgauge: {
-              borderWidth: '0px',
+              borderWidth: '95%',
               dataLabels: {
-                  y: -20,
+                  y: 5,
                   borderWidth: 0,
                   useHTML: true
               }
           }
       },
       series: [{
-          name: 'Current temperature',
-          data: [10],
+          name: this.valueCircleConfig.serieName,
+          data: [this.valueToDisplay],
           type: 'solidgauge',
           linecap: 'square',
           tooltip: {
-              valueSuffix: '° C'
+              valueSuffix: this.valueCircleConfig.tooltipValueSuffix
           },
           dataLabels: {
             style: {
-              fontSize: "50px",
-              fontWeight: "bold"
+              fontSize: '35px',
+              fontWeight: 'bold',
+              color: 'black',
+              textalign: 'center'
             }
           }
       }]

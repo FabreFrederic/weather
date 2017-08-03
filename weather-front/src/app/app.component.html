@@ -23,7 +23,10 @@
       </md-card-header>
       <md-card-content>
         <div>
-          <app-value-circle></app-value-circle>
+          <app-value-circle
+          [valueCircleConfig]="minValueCircleConfig"
+          [valueToDisplay]="minValue">
+          </app-value-circle>
         </div>
       </md-card-content>
     </md-card>
@@ -34,7 +37,10 @@
       </md-card-header>
       <md-card-content>
         <div>
-          <app-value-circle></app-value-circle>
+          <app-value-circle
+          [valueCircleConfig]="currentValueCircleConfig"
+          [valueToDisplay]="currentValue">
+          </app-value-circle>
         </div>
       </md-card-content>
     </md-card>
@@ -46,7 +52,10 @@
       </md-card-header>
       <md-card-content>
         <div>
-          <app-value-circle></app-value-circle>
+          <app-value-circle
+          [valueCircleConfig]="maxValueCircleConfig"
+          [valueToDisplay]="maxValue">
+          </app-value-circle>
         </div>
       </md-card-content>
     </md-card>
