@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MdIconRegistry} from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 
 import { ValueCircleConfig } from '../value-circle/value-circle-config';
@@ -26,8 +28,13 @@ export class TemperatureComponent implements OnInit {
   * Constructor
   * @param  {TemperatureService} private temperatureService
   */
-  constructor(private temperatureService: TemperatureService) {
-    const me = this;
+  constructor(private temperatureService: TemperatureService,
+      iconRegistry: MdIconRegistry, sanitizer: DomSanitizer) {
+
+    iconRegistry.addSvgIcon(
+    'temperature-icon',
+    sanitizer.bypassSecurityTrustResourceUrl('assets/img/temperature-icon.svg'));
+
     this.init();
 
     // Subscribe to the temperature socket to get the last temperature readings
@@ -44,8 +51,8 @@ export class TemperatureComponent implements OnInit {
   private init() {
     this.minValueCircleConfig = new ValueCircleConfig;
     this.minValueCircleConfig.serieName = 'Température minimum '
-    this.minValueCircleConfig.startAngle = -180;
-    this.minValueCircleConfig.endAngle = 90;
+    this.minValueCircleConfig.startAngle = 0;
+    this.minValueCircleConfig.endAngle = 360;
     this.minValueCircleConfig.min = -20;
     this.minValueCircleConfig.max = 45;
     this.minValue = 14;
@@ -53,16 +60,16 @@ export class TemperatureComponent implements OnInit {
 
     this.currentValueCircleConfig = new ValueCircleConfig;
     this.currentValueCircleConfig.serieName = 'Température '
-    this.currentValueCircleConfig.startAngle = -180;
-    this.currentValueCircleConfig.endAngle = 90;
+    this.currentValueCircleConfig.startAngle = 0;
+    this.currentValueCircleConfig.endAngle = 360;
     this.currentValueCircleConfig.min = -20;
     this.currentValueCircleConfig.max = 45;
     this.minValueCircleConfig.tooltipValueSuffix = '° C';
 
     this.maxValueCircleConfig = new ValueCircleConfig;
     this.maxValueCircleConfig.serieName = 'Température maximum '
-    this.maxValueCircleConfig.startAngle = -180;
-    this.maxValueCircleConfig.endAngle = 90;
+    this.maxValueCircleConfig.startAngle = 0;
+    this.maxValueCircleConfig.endAngle = 360;
     this.maxValueCircleConfig.min = -20;
     this.maxValueCircleConfig.max = 45;
     this.maxValue = 38;

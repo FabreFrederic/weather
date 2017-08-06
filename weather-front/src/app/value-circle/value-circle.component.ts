@@ -30,15 +30,18 @@ export class ValueCircleComponent implements AfterViewInit {
   private setOption() {
     this.options = {
       chart: {
-       },
+          type: 'solidgauge'
+      },
       title: null,
       pane: {
-        size: '90%',
+        center: ['50%', '50%'],
+        size: '100%',
          startAngle: this.valueCircleConfig.startAngle,
          endAngle: this.valueCircleConfig.endAngle,
          background: {
-             backgroundColor: '#EEE',
-             innerRadius: '95%',
+             backgroundColor: '#E5E7E6',
+             borderWidth: 0,
+             innerRadius: '80%',
              outerRadius: '100%',
              shape: 'arc'
          }
@@ -63,14 +66,10 @@ export class ValueCircleComponent implements AfterViewInit {
         ],
         lineWidth: 0,
         minorTickInterval: null,
-        tickPixelInterval: 50,
-        tickWidth: 1,
+        tickPixelInterval: null,
+        tickWidth: 0,
         title: {
             y: -70
-        },
-        labels: {
-            enabled: true,
-            distance: 10
         }
       },
       credits: {
@@ -78,11 +77,10 @@ export class ValueCircleComponent implements AfterViewInit {
       },
       plotOptions: {
           solidgauge: {
-              borderWidth: '95%',
+            innerRadius: '80%',
               dataLabels: {
-                  y: 5,
                   borderWidth: 0,
-                  useHTML: true
+                  y: -18
               }
           }
       },
@@ -90,17 +88,16 @@ export class ValueCircleComponent implements AfterViewInit {
           name: this.valueCircleConfig.serieName,
           data: this.valueToDisplay,
           type: 'solidgauge',
-          linecap: 'square',
           tooltip: {
               valueSuffix: this.valueCircleConfig.tooltipValueSuffix
           },
           dataLabels: {
             style: {
-              fontSize: '35px',
-              fontWeight: 'bold',
-              color: 'black',
+              fontSize: '20px',
+              color: '#7F7F7F',
               textalign: 'center'
-            }
+            },
+            format: '{y} °C'
           }
       }]
     };
@@ -117,10 +114,10 @@ export class ValueCircleComponent implements AfterViewInit {
   }
 
   public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-      if (changes['valueToDisplay'] && this.valueToDisplay) {
-        if (this.gauge) {
-          this.gauge.series[0].setData([this.valueToDisplay], true, false);
-        }
+    if (changes['valueToDisplay'] && this.valueToDisplay) {
+      if (this.gauge) {
+        this.gauge.series[0].setData([this.valueToDisplay], true, false);
       }
-   }
+    }
+  }
 }

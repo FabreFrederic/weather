@@ -1,62 +1,71 @@
-<div class="value-circle-card-container">
-  <md-card class="value-circle-card">
-    <md-card-header>
-      <md-card-title>Température minimale</md-card-title>
-      <md-card-subtitle>06:25:37</md-card-subtitle>
-    </md-card-header>
-    <md-card-content>
-      <div>
-        <app-value-circle
-        [valueCircleConfig]="minValueCircleConfig"
-        [valueToDisplay]="minValue">
-        </app-value-circle>
-      </div>
-    </md-card-content>
-  </md-card>
+<div class=temperature-container>
+  <div class="value-circle-card-container">
+    <md-card class="value-circle-card">
+      <md-card-content class="value-circle-card-content">
+        <div>
+          <app-value-circle
+          [valueCircleConfig]="minValueCircleConfig"
+          [valueToDisplay]="minValue">
+          </app-value-circle>
+        </div>
+        <div class="value-circle-card-label">
+          Temperature Minimum
+        </div>
+        <md-icon class="value-circle-card-icon"
+          svgIcon="temperature-icon">
+        </md-icon>
+      </md-card-content>
+    </md-card>
 
-  <md-card class="value-circle-card">
-    <md-card-header>
-      <md-card-title>Température actuelle</md-card-title>
-    </md-card-header>
-    <md-card-content>
-      <div>
-        <app-value-circle
-        [valueCircleConfig]="currentValueCircleConfig"
-        [valueToDisplay]="currentTemperature">
-        </app-value-circle>
-      </div>
-    </md-card-content>
-  </md-card>
+    <md-card class="value-circle-card">
+      <md-card-content class="value-circle-card-content">
+        <div>
+          <app-value-circle
+          [valueCircleConfig]="currentValueCircleConfig"
+          [valueToDisplay]="currentTemperature">
+          </app-value-circle>
+        </div>
+        <div class="value-circle-card-label">
+          Temperature
+        </div>
+        <md-icon class="value-circle-card-icon"
+          svgIcon="temperature-icon">
+        </md-icon>
+      </md-card-content>
+    </md-card>
 
-  <md-card class="value-circle-card">
-    <md-card-header>
-      <md-card-title>Température maximale</md-card-title>
-      <md-card-subtitle>14:57:10</md-card-subtitle>
-    </md-card-header>
-    <md-card-content>
-      <div>
-        <app-value-circle
-        [valueCircleConfig]="maxValueCircleConfig"
-        [valueToDisplay]="maxValue">
-        </app-value-circle>
-      </div>
-    </md-card-content>
-  </md-card>
-</div>
+    <md-card class="value-circle-card">
+      <md-card-content class="value-circle-card-content">
+        <div>
+          <app-value-circle
+          [valueCircleConfig]="maxValueCircleConfig"
+          [valueToDisplay]="maxValue">
+          </app-value-circle>
+        </div>
+        <div class="value-circle-card-label">
+          Temperature Maximum
+        </div>
+        <md-icon class="value-circle-card-icon"
+          svgIcon="temperature-icon">
+        </md-icon>
+      </md-card-content>
+    </md-card>
+  </div>
 
-<div class="chart-card-container">
-  <md-card class="chart-card">
-    <md-card-header>
-      <md-card-title>Temperatures</md-card-title>
-      <md-card-subtitle>Real time values</md-card-subtitle>
-    </md-card-header>
-    <md-card-content>
-      <div>
-        <app-chart
-        [currentTemperature]="currentTemperature"
-        [currentDate]="currentDate">
-        </app-chart>
-      </div>
-    </md-card-content>
-  </md-card>
+  <div class="chart-card-container">
+    <md-card class="chart-card">
+      <md-card-header>
+        <md-card-title>Temperatures</md-card-title>
+        <md-card-subtitle>Real time values</md-card-subtitle>
+      </md-card-header>
+      <md-card-content>
+        <div>
+          <app-chart
+          [currentTemperature]="currentTemperature"
+          [currentDate]="currentDate">
+          </app-chart>
+        </div>
+      </md-card-content>
+    </md-card>
+  </div>
 </div>
