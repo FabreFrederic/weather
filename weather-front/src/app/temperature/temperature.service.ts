@@ -25,8 +25,16 @@ export class TemperatureService {
    * @return {Observable<Temperature>}
    */
   public getTemperature(): Observable<Temperature> {
+
     const observable = new Observable<Temperature>(observer => {
-      this.socket = io(temperatureSocketUrl);
+      this.socket = io.connect(temperatureSocketUrl,
+        {
+          'forceNew': true,
+          'reconnection': false,
+          'reconnectionDelay': 3000,
+          'reconnectionDelayMax' : 5000,
+          'reconnectionAttempts': 5
+      });
       this.socket.on(temperatureSocketName, (data) => {
         observer.next(data);
       });

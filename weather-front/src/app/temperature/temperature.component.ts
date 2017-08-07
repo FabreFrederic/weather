@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MdIconRegistry} from '@angular/material';
 import { Subject } from 'rxjs/Subject';
@@ -11,7 +11,7 @@ import { TemperatureService } from './temperature.service';
   templateUrl: './temperature.component.html',
   styleUrls: ['./temperature.component.css']
 })
-export class TemperatureComponent implements OnInit {
+export class TemperatureComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   public currentTemperature: number;
   public currentDate: number;
@@ -78,4 +78,19 @@ export class TemperatureComponent implements OnInit {
 
   public ngOnInit() {}
 
+  ngOnDestroy() {
+    console.log('On destroy : unsubscribed from socket');
+    this.unsubscribe();
+  }
+
+  private unsubscribe() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    console.log('Before unload : unsubscribed from socket');
+    this.unsubscribe();
+  }
 }

@@ -93,7 +93,7 @@ export class ValueCircleComponent implements AfterViewInit {
           },
           dataLabels: {
             style: {
-              fontSize: '20px',
+              fontSize: '18px',
               color: '#7F7F7F',
               textalign: 'center'
             },

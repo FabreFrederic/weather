@@ -1,4 +1,5 @@
 .temperature-container {
+  overflow: auto;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -10,9 +11,12 @@
   flex-direction: row;
 }
 
-@media only handheld {
+@media all and (max-width: 1000px) {
   .value-circle-card-container {
+    display: flex;
+    justify-content: center;
     flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -39,12 +43,9 @@
   @include md-icon-size('40px');
   color: #7F7F7F;
 }
+
 .value-circle-card-label {
     font-size: 18px;
-}
-
-.mat-card-header {
-  margin-bottom: 24px;
 }
 
 .chart-card-container {
