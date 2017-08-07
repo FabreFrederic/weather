@@ -1,5 +1,5 @@
 const express = require('express');
-var io = require('socket.io');
+const io = require('socket.io');
 const http = require('http');
 const app = express();
 const server = http.createServer(app);
@@ -13,6 +13,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const runScheduler = require('./scheduler/scheduler');
 const temperatureController = require('./controller/temperatureController');
+// Sensor connection and socket
+const serialport = require('./sensor/serialPort');
 
 io = io.listen(portIo, server);
 
@@ -44,45 +46,26 @@ app.use('/temperature', temperatureController);
 const frontBuildFolderPath = '../weather-front/build/';
 app.use(express.static(path.join(__dirname, frontBuildFolderPath)));
 
-// Sensor connection and socket
-const serialport = require('./sensor/serialPort');
-
 let temperature = new Object();
 
-io.on('connection', function(socket) {
-  console.log('user connection');
-
-  // TODO : move in a specific test file
-  // To test only, generate random temperatures reading every sec
-  // runScheduler(function() {
-  //   temperature.temperature = Math.floor(Math.random() * 10);
-  //   temperature.date = new Date();
-  //   io.emit('temperature-message', temperature);
-  //
-  //   temperatureController.createTemperature(temperature.temperature).then(function (result) {
-  //      console.log('New temperature persisted : ', temperature);
-  //   }).catch(function (err) {
-  //       console.log('Error, temperature not persisted : ', temperature.temperature);
-  //   });
-  // });
-
-  serialport.on('data', function(data) {
-    console.log('data', data);
-
-    temperature.temperature = Number(data);
-    temperature.date = new Date();
-
-    // console.log(temperature);
-    io.emit('temperature-message', temperature);
-    temperatureController.createTemperature(temperature.temperature).then(function (result) {
-        console.log(temperature);
-    }).catch(function (err) {
-        console.log('Error, temperature not persisted : ', temperature.temperature);
+io.sockets.on('connection', function (socket) {
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
     });
-  });
+});
 
-  socket.on('disconnect', function() {
-    console.log('user disconnected');
+serialport.on('data', function (data) {
+  console.log('data', data);
+
+  temperature.temperature = Number(data);
+  temperature.date = new Date();
+
+  io.sockets.emit('temperature-message', temperature);
+
+  temperatureController.createTemperature(temperature.temperature).then(function (result) {
+      console.log(temperature);
+  }).catch(function (err) {
+      console.log('Error, temperature not persisted : ', temperature.temperature);
   });
 
   serialport.on('close', function(err) {
@@ -90,7 +73,21 @@ io.on('connection', function(socket) {
   });
 });
 
+const test() {
+  // TODO : move in a specific test file
+  // To test only, generate random temperatures reading every sec
+  runScheduler(function() {
+    temperature.temperature = Math.floor(Math.random() * 10);
+    temperature.date = new Date();
+    io.sockets.emit('temperature-message', temperature);
 
+    temperatureController.createTemperature(temperature.temperature).then(function (result) {
+       console.log('New temperature persisted : ', temperature);
+    }).catch(function (err) {
+        console.log('Error, temperature not persisted : ', temperature.temperature);
+    });
+  });
+}
 
 // Server
 app.listen(port, "0.0.0.0", function() {

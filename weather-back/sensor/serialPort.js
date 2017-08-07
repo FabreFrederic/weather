@@ -3,6 +3,10 @@ var SerialPort = require('serialport');
 const port = '/dev/ttyACM0';
 var serialport = new SerialPort(port, {
     baudrate: 9600,
+    dataBits: 8,
+    parity: 'none',
+    stopBits: 1,
+    flowControl: false,
     parser: SerialPort.parsers.readline("\n")
 });
 
