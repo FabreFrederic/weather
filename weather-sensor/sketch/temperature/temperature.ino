@@ -1,6 +1,6 @@
-#include <OneWire.h> //Librairie du bus OneWire
+#include <OneWire.h>
 // Sensor librarie
-#include <DallasTemperature.h> //Librairie du capteur
+#include <DallasTemperature.h>
 
 // Bus One Wire Bus on the arduino pin 2
 OneWire oneWire(2); 
@@ -21,4 +21,5 @@ void loop() {
  sensors.requestTemperatures();
  // Sensor number 0
  Serial.println(sensors.getTempCByIndex(0));
+ delay(5000);
 }

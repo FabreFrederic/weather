@@ -117,15 +117,9 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
           this.chart.series[0].addPoint([this.currentDate,
             this.currentTemperature], true, false);
         }
-
-        // Historic values
-        this.temperaturePoints.push({
-             x: this.currentDate,
-             y: this.currentTemperature
-         });
       }
    }
-   
+
   ngOnDestroy() {
     console.log('On destroy : unsubscribed from socket');
     this.unsubscribe();
