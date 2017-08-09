@@ -63,7 +63,7 @@ const findTodayTemperatures = function() {
   }
 )};
 
-const saveMaxTemperature = function() {
+const saveTodayMinTemperature = function() {
   return new Promise((resolve, reject) => {
     temperature.create({
         maxTemperature : temperatureValue,
@@ -80,6 +80,27 @@ const saveMaxTemperature = function() {
   }
 )};
 
+const getTodayMinTemperature = function() {
+  var start = new Date();
+  start.setHours(0,0,0,0);
+
+  var end = new Date();
+  end.setHours(23,59,59,999);
+
+  return new Promise((resolve, reject) => {
+    temperature.find( {'date' : { $gte: start, $lt: end } },
+    (err, todayMinTemperature) => {
+      if (err) {
+        console.log('There was a problem finding today minimum temperature in MongoDB' + err);
+        reject(err);
+      } else {
+        //console.log('Get today minimum temperature from MongoDB');
+        resolve(todayMinTemperature);
+      }
+    }).sort( { 'temperature': 1 } ).limit(1);
+  }
+)};
+
 const getTodayMaxTemperature = function() {
   var start = new Date();
   start.setHours(0,0,0,0);
@@ -89,19 +110,20 @@ const getTodayMaxTemperature = function() {
 
   return new Promise((resolve, reject) => {
     temperature.find( {'date' : { $gte: start, $lt: end } },
-    (err, temperatures) => {
+    (err, todayMaxTemperature) => {
       if (err) {
-        console.log('There was a problem finding today temperature in MongoDB' + err);
+        console.log('There was a problem finding today maximum temperature in MongoDB' + err);
         reject(err);
       } else {
-        console.log('Get today temperatures from MongoDB');
-        resolve(temperatures);
+        //console.log('Get today maximum temperature from MongoDB');
+        resolve(todayMaxTemperature);
       }
-    }).sort( { 'date': 1 } );
+    }).sort( { 'temperature': -1 } ).limit(1);
   }
 )};
-
 
 module.exports = router;
 module.exports.createTemperature = createTemperature;
 module.exports.findTodayTemperatures = findTodayTemperatures;
+module.exports.getTodayMinTemperature = getTodayMinTemperature;
+module.exports.getTodayMaxTemperature = getTodayMaxTemperature;

@@ -12,7 +12,9 @@ import { Temperature } from '../business/temperature';
 
 const temperatureSocketUrl = environment.temperatureSocketUrl;
 const temperatureRestUrl = environment.temperatureRestUrl;
-const temperatureSocketName = environment.temperatureSocketName;
+const lastTodayTemperatureSocketName = environment.lastTodayTemperatureSocketName;
+const todayMinTemperatureSocketName = environment.todayMinTemperatureSocketName;
+const todayMaxTemperatureSocketName = environment.todayMaxTemperatureSocketName;
 
 @Injectable()
 export class TemperatureService {
@@ -21,7 +23,7 @@ export class TemperatureService {
   constructor(public http: Http) {}
 
   /**
-   * [getTemperature description]
+   * Get the last temperature reading from a websocket
    * @return {Observable<Temperature>}
    */
   public getTemperature(): Observable<Temperature> {
@@ -35,7 +37,7 @@ export class TemperatureService {
           'reconnectionDelayMax' : 5000,
           'reconnectionAttempts': 5
       });
-      this.socket.on(temperatureSocketName, (data) => {
+      this.socket.on(lastTodayTemperatureSocketName, (data) => {
         observer.next(data);
       });
     });
@@ -56,6 +58,50 @@ export class TemperatureService {
         );
       })
       .catch(this.handleError);
+  }
+
+  /**
+   * Get the today minimum temperature reading from a websocket
+   * @return {Observable<Temperature>}
+   */
+  public getTodayMinTemperature(): Observable<Temperature> {
+
+    const observable = new Observable<Temperature>(observer => {
+      this.socket = io.connect(temperatureSocketUrl,
+        {
+          'forceNew': true,
+          'reconnection': false,
+          'reconnectionDelay': 3000,
+          'reconnectionDelayMax' : 5000,
+          'reconnectionAttempts': 5
+      });
+      this.socket.on(todayMinTemperatureSocketName, (data) => {
+        observer.next(data);
+      });
+    });
+    return observable;
+  }
+
+  /**
+   * Get the today maximum temperature reading from a websocket
+   * @return {Observable<Temperature>}
+   */
+  public getTodayMaxTemperature(): Observable<Temperature> {
+
+    const observable = new Observable<Temperature>(observer => {
+      this.socket = io.connect(temperatureSocketUrl,
+        {
+          'forceNew': true,
+          'reconnection': false,
+          'reconnectionDelay': 3000,
+          'reconnectionDelayMax' : 5000,
+          'reconnectionAttempts': 5
+      });
+      this.socket.on(todayMaxTemperatureSocketName, (data) => {
+        observer.next(data);
+      });
+    });
+    return observable;
   }
 
   /**

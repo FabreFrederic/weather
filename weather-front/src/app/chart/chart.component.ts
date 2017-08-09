@@ -26,7 +26,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   chart: any;
   options: any;
-  @Input() currentTemperature: number;
+  @Input() currentValue: number;
   @Input() currentDate: number;
   private temperaturePoints: TemperaturePoint[] = [];
 
@@ -114,8 +114,8 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
       if (changes['currentDate'] && this.currentDate) {
         if (this.chart) {
-          this.chart.series[0].addPoint([this.currentDate,
-            this.currentTemperature], true, false);
+          this.chart.series[0].addPoint([+new Date(this.currentDate),
+            this.currentValue], true, false);
         }
       }
    }

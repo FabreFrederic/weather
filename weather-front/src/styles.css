@@ -6,3 +6,12 @@ $grey-background : #EDEFEE;
 $blue : #30CAE4;
 $light-blue : #B7EEF5;
 $dark-blue : #198498;
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin : 0;
+  background-color: $grey-background;
+}

@@ -17,7 +17,6 @@ export class ValueCircleComponent implements AfterViewInit {
 
   @Input() valueCircleConfig: ValueCircleConfig;
   @Input() valueToDisplay: number;
-
   gauge: any;
   options: any;
   value: any;

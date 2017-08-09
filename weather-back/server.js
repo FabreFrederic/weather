@@ -1,5 +1,5 @@
 const express = require('express');
-const io = require('socket.io');
+var io = require('socket.io');
 const http = require('http');
 const app = express();
 const server = http.createServer(app);
@@ -13,8 +13,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const runScheduler = require('./scheduler/scheduler');
 const temperatureController = require('./controller/temperatureController');
-// Sensor connection and socket
-const serialport = require('./sensor/serialPort');
+const lastTodayTemperatureSocketName = 'last-today-temperature-message';
+const todayMinTemperatureSocketName = 'today-min-temperature-message';
+const todayMaxTemperatureSocketName = 'today-max-temperature-message';
 
 io = io.listen(portIo, server);
 
@@ -46,48 +47,84 @@ app.use('/temperature', temperatureController);
 const frontBuildFolderPath = '../weather-front/build/';
 app.use(express.static(path.join(__dirname, frontBuildFolderPath)));
 
-let temperature = new Object();
+// Sensor connection and socket
+// const serialport = require('./sensor/serialPort');
 
-io.sockets.on('connection', function (socket) {
-    socket.on('disconnect', function () {
-        console.log('user disconnected');
-    });
+io.on('connection', function(socket) {
+  console.log('user connection');
+
+  // serialport.on('data', function(data) {
+  //   console.log('data', data);
+  //
+  //   let newDate = new Date()
+  //   let newTemperature = Number(data);
+  //
+  //   // console.log(temperature);
+  //   io.emit('lastTodayTemperatureSocketName',
+  //   {'temperature' : Number(data), 'date': new Date());
+  //   temperatureController.createTemperature(newTemperature, newDate).then(function (result) {
+  //     // Debug only
+  //      // console.log('New temperature persisted : ', result);
+  //   }).catch(function (err) {
+  //       console.log('Error, temperature not persisted : ', err);
+  //   });
+  // });
+
+  socket.on('disconnect', function() {
+    console.log('user disconnected');
+  });
+
+  // serialport.on('close', function(err) {
+  //   console.log('serial port closed', err);
+  // });
 });
 
-serialport.on('data', function (data) {
-  console.log('data', data);
+// TODO : move in a specific test file
+// To test only, generate random temperatures reading every sec
+runScheduler(function() {
+  let newDate = new Date()
+  let newTemperature = Math.floor(Math.random() * 10);
 
-  temperature.temperature = Number(data);
-  temperature.date = new Date();
+  io.emit(lastTodayTemperatureSocketName,
+    {'temperature' : newTemperature, 'date': newDate});
 
-  io.sockets.emit('temperature-message', temperature);
-
-  temperatureController.createTemperature(temperature.temperature).then(function (result) {
-      console.log(temperature);
+  temperatureController.createTemperature(newTemperature, newDate).then(function (result) {
+    // Debug only
+    // console.log('New temperature persisted : ', result);
   }).catch(function (err) {
-      console.log('Error, temperature not persisted : ', temperature.temperature);
-  });
-
-  serialport.on('close', function(err) {
-    console.log('serial port closed', err);
+      console.log('Error, temperature not persisted : ', err);
   });
 });
 
-const test() {
-  // TODO : move in a specific test file
-  // To test only, generate random temperatures reading every sec
-  runScheduler(function() {
-    temperature.temperature = Math.floor(Math.random() * 10);
-    temperature.date = new Date();
-    io.sockets.emit('temperature-message', temperature);
+/**
+ * Today minimum temperature reading scheduler
+ */
+ runScheduler(function() {
+   temperatureController.getTodayMinTemperature().then(function (todayMinTemperature) {
+    // Debug only
+    // console.log('Today minimum temperature reading temperature : ', todayMinTemperature[0].temperature);
+    // console.log('Today minimum temperature reading date : ', todayMinTemperature[0].date)
+    io.emit(todayMinTemperatureSocketName,
+        {'temperature' : todayMinTemperature[0].temperature, 'date': todayMinTemperature[0].date});
+   }).catch(function (err) {
+       console.log('Error while finding today minimum temperature : ', err);
+   });
+ });
 
-    temperatureController.createTemperature(temperature.temperature).then(function (result) {
-       console.log('New temperature persisted : ', temperature);
+ /**
+  * Today maximum temperature reading scheduler
+  */
+  runScheduler(function() {
+    temperatureController.getTodayMaxTemperature().then(function (todayMaxTemperature) {
+      // Debug only
+      //  console.log('Today maximum temperature reading temperature : ', todayMaxTemperature[0].temperature);
+      //  console.log('Today maximum temperature reading date : ', todayMaxTemperature[0].date);
+       io.emit(todayMaxTemperatureSocketName,
+         {'temperature' : todayMaxTemperature[0].temperature, 'date': todayMaxTemperature[0].date});
     }).catch(function (err) {
-        console.log('Error, temperature not persisted : ', temperature.temperature);
+        console.log('Error while finding today maximum temperature : ', err);
     });
   });
-}
 
 // Server
 app.listen(port, "0.0.0.0", function() {

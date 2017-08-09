@@ -13,16 +13,24 @@ import { TemperatureService } from './temperature.service';
 })
 export class TemperatureComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  public currentTemperature: number;
-  public currentDate: number;
+
+  public measurementUnitTemperature = '°C';
 
   public minValueCircleConfig: ValueCircleConfig;
-  public minValue: Number;
+  public minValue: number;
+  public minDate: Date;
 
   public currentValueCircleConfig: ValueCircleConfig;
+  public currentValue: number;
+  public currentDate: Date;
 
   public maxValueCircleConfig: ValueCircleConfig;
-  public maxValue: Number;
+  public maxValue: number;
+  public maxDate: Date;
+
+  public averageValueCircleConfig: ValueCircleConfig;
+  public averageValue: number;
+  public averageDate: number;
 
   /**
   * Constructor
@@ -41,10 +49,25 @@ export class TemperatureComponent implements OnInit, OnDestroy {
     this.temperatureService.getTemperature()
       .takeUntil(this.ngUnsubscribe)
       .subscribe(
-      message => {
-        const newDate: number = +new Date(message.date);
-        this.currentDate = newDate;
-        this.currentTemperature = message.temperature;
+      temperatureMessage => {
+        this.currentDate = new Date(temperatureMessage.date);
+        this.currentValue = temperatureMessage.temperature;
+    });
+
+    this.temperatureService.getTodayMinTemperature()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
+    message => {
+      this.minDate = new Date(message.date);
+      this.minValue = message.temperature;
+    });
+
+    this.temperatureService.getTodayMaxTemperature()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
+    message => {
+      this.maxDate = new Date(message.date);
+      this.maxValue = message.temperature;
     });
   }
 
@@ -55,8 +78,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
     this.minValueCircleConfig.endAngle = 360;
     this.minValueCircleConfig.min = -20;
     this.minValueCircleConfig.max = 45;
-    this.minValue = 14;
-    this.minValueCircleConfig.tooltipValueSuffix = '° C';
+    this.minValueCircleConfig.tooltipValueSuffix = '°C';
 
     this.currentValueCircleConfig = new ValueCircleConfig;
     this.currentValueCircleConfig.serieName = 'Température '
@@ -64,7 +86,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
     this.currentValueCircleConfig.endAngle = 360;
     this.currentValueCircleConfig.min = -20;
     this.currentValueCircleConfig.max = 45;
-    this.minValueCircleConfig.tooltipValueSuffix = '° C';
+    this.currentValueCircleConfig.tooltipValueSuffix = '°C';
 
     this.maxValueCircleConfig = new ValueCircleConfig;
     this.maxValueCircleConfig.serieName = 'Température maximum '
@@ -72,8 +94,15 @@ export class TemperatureComponent implements OnInit, OnDestroy {
     this.maxValueCircleConfig.endAngle = 360;
     this.maxValueCircleConfig.min = -20;
     this.maxValueCircleConfig.max = 45;
-    this.maxValue = 38;
-    this.minValueCircleConfig.tooltipValueSuffix = '° C';
+    this.maxValueCircleConfig.tooltipValueSuffix = '°C';
+
+    this.averageValueCircleConfig = new ValueCircleConfig;
+    this.averageValueCircleConfig.serieName = 'Température maximum '
+    this.averageValueCircleConfig.startAngle = 0;
+    this.averageValueCircleConfig.endAngle = 360;
+    this.averageValueCircleConfig.min = -20;
+    this.averageValueCircleConfig.max = 45;
+    this.averageValueCircleConfig.tooltipValueSuffix = '°C';
   }
 
   public ngOnInit() {}

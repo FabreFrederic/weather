@@ -1,6 +1,35 @@
 <div class=temperature-container>
   <div class="value-circle-card-container">
+
     <md-card class="value-circle-card">
+      <md-card-header>
+        <md-icon md-card-avatar class="value-circle-card-icon"
+          svgIcon="temperature-icon">
+        </md-icon>
+        <md-card-title>Temperature actuelle</md-card-title>
+        <md-card-subtitle>{{ currentDate | date:'HH:mm:ss' }}</md-card-subtitle>
+      </md-card-header>
+      <md-card-content class="value-circle-card-content">
+        <div>
+          <app-value-circle
+          [valueCircleConfig]="currentValueCircleConfig"
+          [valueToDisplay]="currentValue">
+          </app-value-circle>
+        </div>
+        <div class="value-circle-card-label">
+          {{ currentValue }}{{ measurementUnitTemperature }}
+        </div>
+      </md-card-content>
+    </md-card>
+
+    <md-card class="value-circle-card">
+      <md-card-header>
+        <md-icon md-card-avatar class="value-circle-card-icon"
+          svgIcon="temperature-icon">
+        </md-icon>
+        <md-card-title>Temperature Minimum</md-card-title>
+        <md-card-subtitle>{{ minDate | date:'HH:mm:ss' }}</md-card-subtitle>
+      </md-card-header>
       <md-card-content class="value-circle-card-content">
         <div>
           <app-value-circle
@@ -9,32 +38,19 @@
           </app-value-circle>
         </div>
         <div class="value-circle-card-label">
-          Temperature Minimum
+          {{ minValue }}{{ measurementUnitTemperature }}
         </div>
-        <md-icon class="value-circle-card-icon"
-          svgIcon="temperature-icon">
-        </md-icon>
       </md-card-content>
     </md-card>
 
     <md-card class="value-circle-card">
-      <md-card-content class="value-circle-card-content">
-        <div>
-          <app-value-circle
-          [valueCircleConfig]="currentValueCircleConfig"
-          [valueToDisplay]="currentTemperature">
-          </app-value-circle>
-        </div>
-        <div class="value-circle-card-label">
-          Temperature
-        </div>
-        <md-icon class="value-circle-card-icon"
+      <md-card-header>
+        <md-icon md-card-avatar class="value-circle-card-icon"
           svgIcon="temperature-icon">
         </md-icon>
-      </md-card-content>
-    </md-card>
-
-    <md-card class="value-circle-card">
+        <md-card-title>Temperature Maximum</md-card-title>
+        <md-card-subtitle>{{ maxDate | date:'HH:mm:ss' }}</md-card-subtitle>
+      </md-card-header>
       <md-card-content class="value-circle-card-content">
         <div>
           <app-value-circle
@@ -43,13 +59,32 @@
           </app-value-circle>
         </div>
         <div class="value-circle-card-label">
-          Temperature Maximum
+          {{ maxValue }}{{ measurementUnitTemperature }}
         </div>
-        <md-icon class="value-circle-card-icon"
-          svgIcon="temperature-icon">
-        </md-icon>
       </md-card-content>
     </md-card>
+
+    <md-card class="value-circle-card">
+      <md-card-header>
+        <md-icon md-card-avatar class="value-circle-card-icon"
+          svgIcon="temperature-icon">
+        </md-icon>
+        <md-card-title>Temperature Moyenne</md-card-title>
+        <md-card-subtitle>calculée à 11:47:28</md-card-subtitle>
+      </md-card-header>
+      <md-card-content class="value-circle-card-content">
+        <div>
+          <app-value-circle
+          [valueCircleConfig]="averageValueCircleConfig"
+          [valueToDisplay]="averageValue">
+          </app-value-circle>
+        </div>
+        <div class="value-circle-card-label">
+          {{ averageValue }}{{ measurementUnitTemperature }}
+        </div>
+      </md-card-content>
+    </md-card>
+
   </div>
 
   <div class="chart-card-container">
@@ -61,7 +96,7 @@
       <md-card-content>
         <div>
           <app-chart
-          [currentTemperature]="currentTemperature"
+          [currentValue]="currentValue"
           [currentDate]="currentDate">
           </app-chart>
         </div>
