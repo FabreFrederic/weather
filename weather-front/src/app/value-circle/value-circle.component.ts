@@ -41,7 +41,7 @@ export class ValueCircleComponent implements AfterViewInit {
          background: {
              backgroundColor: '#E5E7E6',
              borderWidth: 0,
-             innerRadius: '80%',
+             innerRadius: '90%',
              outerRadius: '100%',
              shape: 'arc'
          }
@@ -77,11 +77,7 @@ export class ValueCircleComponent implements AfterViewInit {
       },
       plotOptions: {
           solidgauge: {
-            innerRadius: '80%',
-              dataLabels: {
-                  borderWidth: 0,
-                  y: -18
-              }
+            innerRadius: '90%'
           }
       },
       series: [{
@@ -92,12 +88,9 @@ export class ValueCircleComponent implements AfterViewInit {
               valueSuffix: this.valueCircleConfig.tooltipValueSuffix
           },
           dataLabels: {
-            style: {
-              fontSize: '18px',
-              color: '#7F7F7F',
-              textalign: 'center'
-            },
-            format: '{y} °C'
+            formatter: function () {
+                 return null;
+             }
           }
       }]
     };
