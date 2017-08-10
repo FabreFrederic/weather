@@ -104,8 +104,10 @@ runScheduler(function() {
     // Debug only
     // console.log('Today minimum temperature reading temperature : ', todayMinTemperature[0].temperature);
     // console.log('Today minimum temperature reading date : ', todayMinTemperature[0].date)
-    io.emit(todayMinTemperatureSocketName,
-        {'temperature' : todayMinTemperature[0].temperature, 'date': todayMinTemperature[0].date});
+    if (todayMinTemperature[0] !== undefined) {
+      io.emit(todayMinTemperatureSocketName,
+          {'temperature' : todayMinTemperature[0].temperature, 'date': todayMinTemperature[0].date});
+    }
    }).catch(function (err) {
        console.log('Error while finding today minimum temperature : ', err);
    });
@@ -119,12 +121,30 @@ runScheduler(function() {
       // Debug only
       //  console.log('Today maximum temperature reading temperature : ', todayMaxTemperature[0].temperature);
       //  console.log('Today maximum temperature reading date : ', todayMaxTemperature[0].date);
-       io.emit(todayMaxTemperatureSocketName,
+      if (todayMaxTemperature[0] !== undefined) {
+        io.emit(todayMaxTemperatureSocketName,
          {'temperature' : todayMaxTemperature[0].temperature, 'date': todayMaxTemperature[0].date});
+       }
     }).catch(function (err) {
         console.log('Error while finding today maximum temperature : ', err);
     });
   });
+
+  /**
+   * Today average temperature reading scheduler
+   */
+   runScheduler(function() {
+     temperatureController.getTodayAverageTemperature().then(function (todayAverageTemperature) {
+       // Debug only
+        console.log('Today average temperature reading temperature : ', todayAverageTemperature);
+       if (todayAverageTemperature !== undefined) {
+         io.emit(todayMaxTemperatureSocketName,
+          {'temperature' : todayAverageTemperature});
+        }
+     }).catch(function (err) {
+         console.log('Error while finding today average temperature : ', err);
+     });
+   });
 
 // Server
 app.listen(port, "0.0.0.0", function() {
