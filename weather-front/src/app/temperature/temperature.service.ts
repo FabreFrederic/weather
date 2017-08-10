@@ -12,7 +12,7 @@ import { Temperature } from '../business/temperature';
 
 const temperatureSocketUrl = environment.temperatureSocketUrl;
 const temperatureRestUrl = environment.temperatureRestUrl;
-const lastTodayTemperatureSocketName = environment.lastTodayTemperatureSocketName;
+const todayTemperatureSocketName = environment.todayTemperatureSocketName;
 const todayMinTemperatureSocketName = environment.todayMinTemperatureSocketName;
 const todayMaxTemperatureSocketName = environment.todayMaxTemperatureSocketName;
 const todayAverageTemperatureSocketName = environment.todayAverageTemperatureSocketName;
@@ -22,6 +22,69 @@ export class TemperatureService {
   private socket;
 
   constructor(public http: Http) {}
+
+  /**
+   * Get the today temperatures, from 00:00 am to now
+   * @return {Observable<Temperature[]>}
+   */
+  public getTodayTemperatures(): Observable<Temperature[]> {
+    return this.http
+      .get(temperatureRestUrl + '/temperature/today')
+      .map((response:Response) => {
+        // console.log('getTodayTemperatures');
+        const temperatures = response.json();
+        return temperatures.map((temperature) => new Temperature(temperature)
+        );
+      })
+      .catch(this.handleError);
+  }
+
+public getLastTodayTemperature(): Observable<Temperature> {
+  return this.http
+    .get(temperatureRestUrl + '/temperature/lasttodaytemperature')
+    .map((response:Response) => {
+      const temperature = response.json();
+      console.log('getLastTodayTemperature : ' + temperature);
+      return temperature.map((temperature) => new Temperature(temperature)
+      );
+    })
+    .catch(this.handleError);
+}
+
+  public getLastTodayMinTemperature(): Observable<Temperature> {
+    return this.http
+      .get(temperatureRestUrl + '/temperature/lasttodaymintemperature')
+      .map((response:Response) => {
+        const temperature = response.json();
+        console.log('getLastTodayMinTemperature : ' + temperature);
+        return temperature.map((temperature) => new Temperature(temperature)
+        );
+      })
+      .catch(this.handleError);
+  }
+
+  public getLastTodayMaxTemperature(): Observable<Temperature> {
+    return this.http
+      .get(temperatureRestUrl + '/temperature/lasttodaymaxtemperature')
+      .map((response:Response) => {
+        const temperature = response.json();
+        console.log('getLastTodayMaxTemperature : ' + temperature);
+        return temperature.map((temperature) => new Temperature(temperature)
+        );
+      })
+      .catch(this.handleError);
+  }
+
+  public getLastTodayAverageTemperature(): Observable<Temperature> {
+    return this.http
+      .get(temperatureRestUrl + '/temperature/lasttodayaveragetemperature')
+      .map((response:Response) => {
+        const temperature = response.json();
+        console.log('getLastTodayAverageTemperature : ' + temperature);
+        return temperature;
+      })
+      .catch(this.handleError);
+  }
 
   /**
    * Get the last temperature reading from a websocket
@@ -38,27 +101,11 @@ export class TemperatureService {
           'reconnectionDelayMax' : 5000,
           'reconnectionAttempts': 5
       });
-      this.socket.on(lastTodayTemperatureSocketName, (data) => {
+      this.socket.on(todayTemperatureSocketName, (data) => {
         observer.next(data);
       });
     });
     return observable;
-  }
-
-  /**
-   * Get the today temperatures, from 00:00 am to now
-   * @return {Observable<Temperature[]>}
-   */
-  public getTodayTemperatures(): Observable<Temperature[]> {
-    return this.http
-      .get(temperatureRestUrl + '/temperature/today')
-      .map((response:Response) => {
-        console.log('getTodayTemperatures', new Date());
-        const temperatures = response.json();
-        return temperatures.map((temperature) => new Temperature(temperature)
-        );
-      })
-      .catch(this.handleError);
   }
 
   /**

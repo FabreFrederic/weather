@@ -9,10 +9,10 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 // creates a new temperature
 router.post('/', (req, res) => {
-  createTemperature(req.body.temperature).then(function (result) {
+  createTemperature(req.body.temperature).then((result) => {
       res.status(200).send(result);
   }).catch((err) => {
-      res.status(500).send('There was a problem adding the information to MongoDB');
+      res.status(500).send('There was a problem adding the information');
   });
 });
 
@@ -35,10 +35,38 @@ const createTemperature = function(temperatureValue) {
 
 // Returns all the today temperatures
 router.get('/today', (req, res) => {
-  findTodayTemperatures(req.body.temperature).then(function (result) {
+  findTodayTemperatures().then((result) => {
       res.status(200).send(result);
   }).catch((err) => {
-      res.status(500).send('There was a problem retrieving the today temperatures from MongoDB');
+    console.log('error : ' +  err);
+    res.status(500).send('There was a problem retrieving the today temperatures');
+  });
+});
+
+router.get('/lasttodaymintemperature', (req, res) => {
+  getTodayMinTemperature().then((result) => {
+      res.status(200).send(result);
+  }).catch((err) => {
+    console.log('error : ' +  err);
+    res.status(500).send('There was a problem retrieving the today min temperature');
+  });
+});
+
+router.get('/lasttodaymaxtemperature', (req, res) => {
+  getTodayMaxTemperature().then((result) => {
+      res.status(200).send(result);
+  }).catch((err) => {
+    console.log('error : ' +  err);
+    res.status(500).send('There was a problem retrieving the today max temperature');
+  });
+});
+
+router.get('/lasttodayaveragetemperature', (req, res) => {
+  getTodayAverageTemperature().then((result) => {
+      res.status(200).send({temperature:  result, date: new Date()});
+  }).catch((err) => {
+      console.log('error : ' +  err);
+      res.status(500).send('There was a problem retrieving the today average temperature');
   });
 });
 
@@ -156,8 +184,8 @@ const getTodayAverageTemperature = function() {
         console.log('There was a problem finding today average temperature in MongoDB : no temperature');
         resolve(undefined);
       } else {
-        // console.log('Get today average temperature from MongoDB: ',
-        //   average[0].averageTemperature);
+        console.log('Get today average temperature from MongoDB: ',
+          average[0].averageTemperature);
         resolve(Math.round(average[0].averageTemperature * 100) / 100);
       }
     });
