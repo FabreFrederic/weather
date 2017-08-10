@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng build --output-path=build/ && ng serve --host 0.0.0.0",
+    "start": "ng build --output-path=build/ && ng serve --host 0.0.0.0 --disableHostCheck true",
     "build": "ng build",
     "build2": "ng build --output-path=build/",
     "test": "ng test",
