@@ -16,6 +16,7 @@ const temperatureController = require('./controller/temperatureController');
 const lastTodayTemperatureSocketName = 'last-today-temperature-message';
 const todayMinTemperatureSocketName = 'today-min-temperature-message';
 const todayMaxTemperatureSocketName = 'today-max-temperature-message';
+const todayAverageTemperatureSocketName = 'today-average-temperature-message';
 
 io = io.listen(portIo, server);
 
@@ -96,10 +97,7 @@ runScheduler(function() {
   });
 });
 
-/**
- * Today minimum temperature reading scheduler
- */
- runScheduler(function() {
+runScheduler(function() {
    temperatureController.getTodayMinTemperature().then(function (todayMinTemperature) {
     // Debug only
     // console.log('Today minimum temperature reading temperature : ', todayMinTemperature[0].temperature);
@@ -111,40 +109,30 @@ runScheduler(function() {
    }).catch(function (err) {
        console.log('Error while finding today minimum temperature : ', err);
    });
- });
 
- /**
-  * Today maximum temperature reading scheduler
-  */
-  runScheduler(function() {
-    temperatureController.getTodayMaxTemperature().then(function (todayMaxTemperature) {
-      // Debug only
-      //  console.log('Today maximum temperature reading temperature : ', todayMaxTemperature[0].temperature);
-      //  console.log('Today maximum temperature reading date : ', todayMaxTemperature[0].date);
-      if (todayMaxTemperature[0] !== undefined) {
-        io.emit(todayMaxTemperatureSocketName,
-         {'temperature' : todayMaxTemperature[0].temperature, 'date': todayMaxTemperature[0].date});
-       }
-    }).catch(function (err) {
-        console.log('Error while finding today maximum temperature : ', err);
-    });
-  });
-
-  /**
-   * Today average temperature reading scheduler
-   */
-   runScheduler(function() {
-     temperatureController.getTodayAverageTemperature().then(function (todayAverageTemperature) {
-       // Debug only
-        console.log('Today average temperature reading temperature : ', todayAverageTemperature);
-       if (todayAverageTemperature !== undefined) {
-         io.emit(todayMaxTemperatureSocketName,
-          {'temperature' : todayAverageTemperature});
-        }
-     }).catch(function (err) {
-         console.log('Error while finding today average temperature : ', err);
-     });
+   temperatureController.getTodayMaxTemperature().then(function (todayMaxTemperature) {
+     // Debug only
+     //  console.log('Today maximum temperature reading temperature : ', todayMaxTemperature[0].temperature);
+     //  console.log('Today maximum temperature reading date : ', todayMaxTemperature[0].date);
+     if (todayMaxTemperature[0] !== undefined) {
+       io.emit(todayMaxTemperatureSocketName,
+        {'temperature' : todayMaxTemperature[0].temperature, 'date': todayMaxTemperature[0].date});
+      }
+   }).catch(function (err) {
+       console.log('Error while finding today maximum temperature : ', err);
    });
+
+   temperatureController.getTodayAverageTemperature().then(function (todayAverageTemperature) {
+     // Debug only
+     // console.log('Today average temperature reading temperature : ', todayAverageTemperature);
+     if (todayAverageTemperature !== undefined) {
+       io.emit(todayAverageTemperatureSocketName,
+        {'temperature' : todayAverageTemperature, 'date': new Date()});
+      }
+   }).catch(function (err) {
+       console.log('Error while finding today average temperature : ', err);
+   });
+ });
 
 // Server
 app.listen(port, "0.0.0.0", function() {

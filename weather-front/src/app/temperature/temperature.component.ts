@@ -30,7 +30,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
 
   public averageValueCircleConfig: ValueCircleConfig;
   public averageValue: number;
-  public averageDate: number;
+  public averageDate: Date;
 
   /**
   * Constructor
@@ -68,6 +68,14 @@ export class TemperatureComponent implements OnInit, OnDestroy {
     message => {
       this.maxDate = new Date(message.date);
       this.maxValue = message.temperature;
+    });
+
+    this.temperatureService.getTodayAverageTemperature()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
+    message => {
+      this.averageDate = new Date(message.date);
+      this.averageValue = message.temperature;
     });
   }
 

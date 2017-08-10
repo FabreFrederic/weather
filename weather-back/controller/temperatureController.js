@@ -152,12 +152,12 @@ const getTodayAverageTemperature = function() {
       if (err) {
         console.log('There was a problem finding today average temperature in MongoDB' + err);
         reject(err);
-      } else if (average[0].averageTemperature === undefined) {
+      } else if (average[0] === undefined || average[0].averageTemperature === undefined) {
         console.log('There was a problem finding today average temperature in MongoDB : no temperature');
         resolve(undefined);
       } else {
-        console.log('Get today average temperature from MongoDB: ',
-          average[0].averageTemperature);
+        // console.log('Get today average temperature from MongoDB: ',
+        //   average[0].averageTemperature);
         resolve(Math.round(average[0].averageTemperature * 100) / 100);
       }
     });

@@ -15,6 +15,7 @@ const temperatureRestUrl = environment.temperatureRestUrl;
 const lastTodayTemperatureSocketName = environment.lastTodayTemperatureSocketName;
 const todayMinTemperatureSocketName = environment.todayMinTemperatureSocketName;
 const todayMaxTemperatureSocketName = environment.todayMaxTemperatureSocketName;
+const todayAverageTemperatureSocketName = environment.todayAverageTemperatureSocketName;
 
 @Injectable()
 export class TemperatureService {
@@ -98,6 +99,28 @@ export class TemperatureService {
           'reconnectionAttempts': 5
       });
       this.socket.on(todayMaxTemperatureSocketName, (data) => {
+        observer.next(data);
+      });
+    });
+    return observable;
+  }
+
+  /**
+   * Get the today average temperature reading from a websocket
+   * @return {Observable<Temperature>}
+   */
+  public getTodayAverageTemperature(): Observable<Temperature> {
+
+    const observable = new Observable<Temperature>(observer => {
+      this.socket = io.connect(temperatureSocketUrl,
+        {
+          'forceNew': true,
+          'reconnection': false,
+          'reconnectionDelay': 3000,
+          'reconnectionDelayMax' : 5000,
+          'reconnectionAttempts': 5
+      });
+      this.socket.on(todayAverageTemperatureSocketName, (data) => {
         observer.next(data);
       });
     });

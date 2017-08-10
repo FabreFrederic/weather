@@ -4,5 +4,6 @@ export const environment = {
   temperatureRestUrl: 'http://' + window.location.hostname + ':8085',
   lastTodayTemperatureSocketName: 'last-today-temperature-message',
   todayMinTemperatureSocketName: 'today-min-temperature-message',
-  todayMaxTemperatureSocketName: 'today-max-temperature-message'
+  todayMaxTemperatureSocketName: 'today-max-temperature-message',
+  todayAverageTemperatureSocketName: 'today-average-temperature-message'
 };

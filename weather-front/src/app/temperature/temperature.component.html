@@ -7,7 +7,7 @@
           svgIcon="temperature-icon">
         </md-icon>
         <md-card-title>Temperature actuelle</md-card-title>
-        <md-card-subtitle>{{ currentDate | date:'HH:mm:ss' }}</md-card-subtitle>
+        <md-card-subtitle *ngIf="currentDate">{{ currentDate | date:'HH:mm:ss' }}</md-card-subtitle>
       </md-card-header>
       <md-card-content class="value-circle-card-content">
         <div>
@@ -28,7 +28,7 @@
           svgIcon="temperature-icon">
         </md-icon>
         <md-card-title>Temperature Minimum</md-card-title>
-        <md-card-subtitle>{{ minDate | date:'HH:mm:ss' }}</md-card-subtitle>
+        <md-card-subtitle *ngIf="minDate">{{ minDate | date:'HH:mm:ss' }}</md-card-subtitle>
       </md-card-header>
       <md-card-content class="value-circle-card-content">
         <div>
@@ -49,7 +49,7 @@
           svgIcon="temperature-icon">
         </md-icon>
         <md-card-title>Temperature Maximum</md-card-title>
-        <md-card-subtitle>{{ maxDate | date:'HH:mm:ss' }}</md-card-subtitle>
+        <md-card-subtitle *ngIf="maxDate">{{ maxDate | date:'HH:mm:ss' }}</md-card-subtitle>
       </md-card-header>
       <md-card-content class="value-circle-card-content">
         <div>
@@ -70,7 +70,7 @@
           svgIcon="temperature-icon">
         </md-icon>
         <md-card-title>Temperature Moyenne</md-card-title>
-        <md-card-subtitle>calculée à 11:47:28</md-card-subtitle>
+        <md-card-subtitle *ngIf="averageDate">calculée à {{ averageDate | date:'HH:mm:ss' }}</md-card-subtitle>
       </md-card-header>
       <md-card-content class="value-circle-card-content">
         <div>
