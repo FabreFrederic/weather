@@ -43,6 +43,15 @@ router.get('/today', (req, res) => {
   });
 });
 
+router.get('/lasttodaytemperature', (req, res) => {
+  getLastTodayTemperature().then((result) => {
+      res.status(200).send({temperature:  result, date: new Date()});
+  }).catch((err) => {
+      console.log('error : ' +  err);
+      res.status(500).send('There was a problem retrieving the last today temperature');
+  });
+});
+
 router.get('/lasttodaymintemperature', (req, res) => {
   getTodayMinTemperature().then((result) => {
       res.status(200).send(result);
@@ -105,6 +114,27 @@ const saveTodayMinTemperature = function() {
         resolve(newTemperature);
       }
     });
+  }
+)};
+
+const getLastTodayTemperature = function() {
+  var start = new Date();
+  start.setHours(0,0,0,0);
+
+  var end = new Date();
+  end.setHours(23,59,59,999);
+
+  return new Promise((resolve, reject) => {
+    temperature.find( {'date' : { $gte: start, $lt: end } },
+    (err, lastTodayTemperature) => {
+      if (err) {
+        console.log('There was a problem finding today minimum temperature in MongoDB' + err);
+        reject(err);
+      } else {
+        //console.log('Get today minimum temperature from MongoDB');
+        resolve(lastTodayTemperature);
+      }
+    }).sort( { 'date': -1 } ).limit(1);
   }
 )};
 

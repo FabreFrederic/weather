@@ -44,9 +44,8 @@ public getLastTodayTemperature(): Observable<Temperature> {
     .get(temperatureRestUrl + '/temperature/lasttodaytemperature')
     .map((response:Response) => {
       const temperature = response.json();
-      console.log('getLastTodayTemperature : ' + temperature);
-      return temperature.map((temperature) => new Temperature(temperature)
-      );
+      console.log('getLastTodayTemperature : ', temperature);
+      return temperature;
     })
     .catch(this.handleError);
 }
