@@ -10,13 +10,6 @@ import * as io from 'socket.io-client';
 import { environment } from 'environments/environment';
 import { Temperature } from '../business/temperature';
 
-const temperatureSocketUrl = environment.temperatureSocketUrl;
-const temperatureRestUrl = environment.temperatureRestUrl;
-const todayTemperatureSocketName = environment.todayTemperatureSocketName;
-const todayMinTemperatureSocketName = environment.todayMinTemperatureSocketName;
-const todayMaxTemperatureSocketName = environment.todayMaxTemperatureSocketName;
-const todayAverageTemperatureSocketName = environment.todayAverageTemperatureSocketName;
-
 @Injectable()
 export class TemperatureService {
   private socket;
@@ -29,8 +22,8 @@ export class TemperatureService {
    */
   public getTodayTemperatures(): Observable<Temperature[]> {
     return this.http
-      .get(temperatureRestUrl + '/temperature/today')
-      .map((response:Response) => {
+      .get(environment.temperatureRestUrl + '/temperature/today')
+      .map((response: Response) => {
         // console.log('getTodayTemperatures');
         const temperatures = response.json();
         return temperatures.map((temperature) => new Temperature(temperature)
@@ -39,53 +32,31 @@ export class TemperatureService {
       .catch(this.handleError);
   }
 
-  public getLastTodayAverageTemperature(): Observable<Temperature> {
+  public getLastTemperature(url: string): Observable<Temperature> {
     return this.http
-      .get(temperatureRestUrl + '/temperature/lasttodayaveragetemperature')
-      .map((response:Response) => {
+      .get(environment.temperatureRestUrl + '/temperature/' + url)
+      .map((response: Response) => {
         const temperature = response.json();
-        console.log('getLastTodayAverageTemperature : ', temperature);
         return temperature;
       })
       .catch(this.handleError);
   }
 
-public getLastTodayTemperature(): Observable<Temperature> {
-  return this.http
-    .get(temperatureRestUrl + '/temperature/lasttodaytemperature')
-    .map((response:Response) => {
-      const temperature = response.json();
-      console.log('getLastTodayTemperature : ', temperature);
-      return temperature;
-    })
-    .catch(this.handleError);
-}
+  public getLastTodayTemperature(): Observable<Temperature> {
+    return this.getLastTemperature(environment.lastTodayTemperatureRestUrl);
+  }
+
+  public getLastTodayAverageTemperature(): Observable<Temperature> {
+    return this.getLastTemperature(environment.lastTodayAverageTemperatureRestUrl);
+  }
 
   public getLastTodayMinTemperature(): Observable<Temperature> {
-    return this.http
-      .get(temperatureRestUrl + '/temperature/lasttodaymintemperature')
-      .map((response:Response) => {
-        const temperature = response.json();
-        console.log('getLastTodayMinTemperature : ', temperature);
-        return temperature.map((temperature) => new Temperature(temperature)
-        );
-      })
-      .catch(this.handleError);
+    return this.getLastTemperature(environment.lastTodayMinTemperatureRestUrl);
   }
 
   public getLastTodayMaxTemperature(): Observable<Temperature> {
-    return this.http
-      .get(temperatureRestUrl + '/temperature/lasttodaymaxtemperature')
-      .map((response:Response) => {
-        const temperature = response.json();
-        console.log('getLastTodayMaxTemperature : ', temperature);
-        return temperature.map((temperature) => new Temperature(temperature)
-        );
-      })
-      .catch(this.handleError);
+    return this.getLastTemperature(environment.lastTodayMaxTemperatureRestUrl);
   }
-
-
 
   /**
    * Get the last temperature reading from a websocket
@@ -94,7 +65,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
   public getTemperature(): Observable<Temperature> {
 
     const observable = new Observable<Temperature>(observer => {
-      this.socket = io.connect(temperatureSocketUrl,
+      this.socket = io.connect(environment.temperatureSocketUrl,
         {
           'forceNew': true,
           'reconnection': false,
@@ -102,7 +73,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
           'reconnectionDelayMax' : 5000,
           'reconnectionAttempts': 5
       });
-      this.socket.on(todayTemperatureSocketName, (data) => {
+      this.socket.on(environment.todayTemperatureSocketName, (data) => {
         observer.next(data);
       });
     });
@@ -116,7 +87,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
   public getTodayMinTemperature(): Observable<Temperature> {
 
     const observable = new Observable<Temperature>(observer => {
-      this.socket = io.connect(temperatureSocketUrl,
+      this.socket = io.connect(environment.temperatureSocketUrl,
         {
           'forceNew': true,
           'reconnection': false,
@@ -124,7 +95,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
           'reconnectionDelayMax' : 5000,
           'reconnectionAttempts': 5
       });
-      this.socket.on(todayMinTemperatureSocketName, (data) => {
+      this.socket.on(environment.todayMinTemperatureSocketName, (data) => {
         observer.next(data);
       });
     });
@@ -138,7 +109,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
   public getTodayMaxTemperature(): Observable<Temperature> {
 
     const observable = new Observable<Temperature>(observer => {
-      this.socket = io.connect(temperatureSocketUrl,
+      this.socket = io.connect(environment.temperatureSocketUrl,
         {
           'forceNew': true,
           'reconnection': false,
@@ -146,7 +117,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
           'reconnectionDelayMax' : 5000,
           'reconnectionAttempts': 5
       });
-      this.socket.on(todayMaxTemperatureSocketName, (data) => {
+      this.socket.on(environment.todayMaxTemperatureSocketName, (data) => {
         observer.next(data);
       });
     });
@@ -160,7 +131,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
   public getTodayAverageTemperature(): Observable<Temperature> {
 
     const observable = new Observable<Temperature>(observer => {
-      this.socket = io.connect(temperatureSocketUrl,
+      this.socket = io.connect(environment.temperatureSocketUrl,
         {
           'forceNew': true,
           'reconnection': false,
@@ -168,7 +139,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
           'reconnectionDelayMax' : 5000,
           'reconnectionAttempts': 5
       });
-      this.socket.on(todayAverageTemperatureSocketName, (data) => {
+      this.socket.on(environment.todayAverageTemperatureSocketName, (data) => {
         observer.next(data);
       });
     });

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
 
-let Highcharts = require('highcharts/highstock');
+const Highcharts = require('highcharts/highstock');
 
 import { TemperatureService } from '../temperature/temperature.service';
 
@@ -20,7 +20,7 @@ interface TemperaturePoint {
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css']
 })
-export class ChartComponent implements AfterViewInit, OnDestroy, OnInit {
+export class ChartComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges {
   @ViewChild('chartContainer') public chartContainer: ElementRef;
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();

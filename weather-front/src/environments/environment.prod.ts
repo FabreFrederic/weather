@@ -5,5 +5,9 @@ export const environment = {
   todayTemperatureSocketName: 'today-temperature-message',
   todayMinTemperatureSocketName: 'today-min-temperature-message',
   todayMaxTemperatureSocketName: 'today-max-temperature-message',
-  todayAverageTemperatureSocketName: 'today-average-temperature-message'
+  todayAverageTemperatureSocketName: 'today-average-temperature-message',
+  lastTodayTemperatureRestUrl: 'lasttodaytemperature',
+  lastTodayAverageTemperatureRestUrl: 'lasttodayaveragetemperature',
+  lastTodayMinTemperatureRestUrl: 'lasttodaymintemperature',
+  lastTodayMaxTemperatureRestUrl: 'lasttodaymaxtemperature'
 };

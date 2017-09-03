@@ -1,4 +1,5 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, Input, SimpleChange } from '@angular/core';
+import { Component, AfterViewInit, OnChanges,
+  ViewChild, ElementRef, Input, SimpleChange } from '@angular/core';
 import * as highcharts from 'highcharts';
 
 import { ValueCircleConfig } from './value-circle-config';
@@ -12,7 +13,7 @@ const solidGauge = require('highcharts/modules/solid-gauge');
   templateUrl: './value-circle.component.html',
   styleUrls: ['./value-circle.component.css']
 })
-export class ValueCircleComponent implements AfterViewInit {
+export class ValueCircleComponent implements AfterViewInit, OnChanges {
   @ViewChild('gaugeContainer') public gaugeContainer: ElementRef;
 
   @Input() valueCircleConfig: ValueCircleConfig;
