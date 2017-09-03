@@ -45,10 +45,19 @@ router.get('/today', (req, res) => {
 
 router.get('/lasttodaytemperature', (req, res) => {
   getLastTodayTemperature().then((result) => {
-      res.status(200).send({temperature:  result, date: new Date()});
+      res.status(200).send(result);
   }).catch((err) => {
       console.log('error : ' +  err);
       res.status(500).send('There was a problem retrieving the last today temperature');
+  });
+});
+
+router.get('/lasttodayaveragetemperature', (req, res) => {
+  getTodayAverageTemperature().then((result) => {
+      res.status(200).send({temperature:  result, date: new Date()});
+  }).catch((err) => {
+      console.log('error : ' +  err);
+      res.status(500).send('There was a problem retrieving the today average temperature');
   });
 });
 
@@ -67,15 +76,6 @@ router.get('/lasttodaymaxtemperature', (req, res) => {
   }).catch((err) => {
     console.log('error : ' +  err);
     res.status(500).send('There was a problem retrieving the today max temperature');
-  });
-});
-
-router.get('/lasttodayaveragetemperature', (req, res) => {
-  getTodayAverageTemperature().then((result) => {
-      res.status(200).send({temperature:  result, date: new Date()});
-  }).catch((err) => {
-      console.log('error : ' +  err);
-      res.status(500).send('There was a problem retrieving the today average temperature');
   });
 });
 
@@ -228,3 +228,4 @@ module.exports.findTodayTemperatures = findTodayTemperatures;
 module.exports.getTodayMinTemperature = getTodayMinTemperature;
 module.exports.getTodayMaxTemperature = getTodayMaxTemperature;
 module.exports.getTodayAverageTemperature = getTodayAverageTemperature;
+module.exports.getLastTodayTemperature = getLastTodayTemperature;

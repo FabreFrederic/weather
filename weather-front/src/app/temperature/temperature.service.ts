@@ -39,6 +39,17 @@ export class TemperatureService {
       .catch(this.handleError);
   }
 
+  public getLastTodayAverageTemperature(): Observable<Temperature> {
+    return this.http
+      .get(temperatureRestUrl + '/temperature/lasttodayaveragetemperature')
+      .map((response:Response) => {
+        const temperature = response.json();
+        console.log('getLastTodayAverageTemperature : ', temperature);
+        return temperature;
+      })
+      .catch(this.handleError);
+  }
+
 public getLastTodayTemperature(): Observable<Temperature> {
   return this.http
     .get(temperatureRestUrl + '/temperature/lasttodaytemperature')
@@ -55,7 +66,7 @@ public getLastTodayTemperature(): Observable<Temperature> {
       .get(temperatureRestUrl + '/temperature/lasttodaymintemperature')
       .map((response:Response) => {
         const temperature = response.json();
-        console.log('getLastTodayMinTemperature : ' + temperature);
+        console.log('getLastTodayMinTemperature : ', temperature);
         return temperature.map((temperature) => new Temperature(temperature)
         );
       })
@@ -67,23 +78,14 @@ public getLastTodayTemperature(): Observable<Temperature> {
       .get(temperatureRestUrl + '/temperature/lasttodaymaxtemperature')
       .map((response:Response) => {
         const temperature = response.json();
-        console.log('getLastTodayMaxTemperature : ' + temperature);
+        console.log('getLastTodayMaxTemperature : ', temperature);
         return temperature.map((temperature) => new Temperature(temperature)
         );
       })
       .catch(this.handleError);
   }
 
-  public getLastTodayAverageTemperature(): Observable<Temperature> {
-    return this.http
-      .get(temperatureRestUrl + '/temperature/lasttodayaveragetemperature')
-      .map((response:Response) => {
-        const temperature = response.json();
-        console.log('getLastTodayAverageTemperature : ' + temperature);
-        return temperature;
-      })
-      .catch(this.handleError);
-  }
+
 
   /**
    * Get the last temperature reading from a websocket

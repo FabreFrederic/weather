@@ -118,7 +118,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
       .getLastTodayTemperature()
       .subscribe(
         (todayTemperature) => {
-          console.log('todayTemperature : ' + todayTemperature);
+          console.log('todayTemperature : ', todayTemperature);
           if (todayTemperature[0] !== undefined &&
             todayTemperature[0].temperature !== undefined) {
             this.currentValue = todayTemperature[0].temperature;
@@ -131,7 +131,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
       .getLastTodayMinTemperature()
       .subscribe(
         (todayMinTemperature) => {
-          console.log('todayMinTemperature : ' + todayMinTemperature);
+          console.log('todayMinTemperature : ', todayMinTemperature);
           if (todayMinTemperature[0] !== undefined &&
             todayMinTemperature[0].temperature !== undefined) {
             this.minValue = todayMinTemperature[0].temperature;
@@ -144,7 +144,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
       .getLastTodayMaxTemperature()
       .subscribe(
         (todayMaxTemperature) => {
-          console.log('todayMaxTemperature : ' + todayMaxTemperature);
+          console.log('todayMaxTemperature : ', todayMaxTemperature);
           if (todayMaxTemperature[0] !== undefined &&
             todayMaxTemperature[0].temperature !== undefined) {
             this.maxValue = todayMaxTemperature[0].temperature;
@@ -153,18 +153,18 @@ export class TemperatureComponent implements OnInit, OnDestroy {
         }
       );
 
-    this.temperatureService
-      .getLastTodayAverageTemperature()
-      .subscribe(
-        (todayAverageTemperature) => {
-          console.log('todayAverageTemperature : ', todayAverageTemperature);
-          if (todayAverageTemperature !== undefined &&
-            todayAverageTemperature.temperature !== undefined) {
-            this.averageValue = todayAverageTemperature.temperature;
-            this.averageDate = new Date(todayAverageTemperature.date);
+      this.temperatureService
+        .getLastTodayAverageTemperature()
+        .subscribe(
+          (todayAverageTemperature) => {
+            console.log('todayAverageTemperature : ', todayAverageTemperature);
+            if (todayAverageTemperature !== undefined &&
+              todayAverageTemperature.temperature !== undefined) {
+              this.averageValue = todayAverageTemperature.temperature;
+              this.averageDate = new Date(todayAverageTemperature.date);
+            }
           }
-        }
-      );
+        );
   }
 
   ngOnDestroy() {
